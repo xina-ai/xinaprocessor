@@ -1,4 +1,5 @@
 import random
+from typing import Text
 from xinaprocessor.base import BaseCleaner
 from xinaprocessor.constants import ARABIC_CHARS
 from xinaprocessor.helper import *
@@ -126,7 +127,7 @@ class TextCleaner(BaseCleaner):
         )
 
     def remove_empty_lines(self):
-        return self._filter(self.lines, len)
+        return self.filter_lines_below_len(1)
 
     def remove_lines_below_len(self, length: int):
         return self._filter(self.lines, lambda line: len(line) < length)
@@ -136,6 +137,12 @@ class TextCleaner(BaseCleaner):
 
     def remove_lines_with_len(self, length: int):
         return self._filter(self.lines, lambda line: len(line) == length)
+
+    def remove_lines_contain(self, char: int):
+        return self._filter(self.lines, lambda line: char not in line)
+
+    def filter_lines_contain(self, char: int):
+        return self._filter(self.lines, lambda line: char in line)
 
     def strip(self):
         return self._map(self.lines, str.strip)
@@ -249,9 +256,24 @@ class TextCleaner(BaseCleaner):
         """
         return self.sep.join(self._get(ARABIC_CHARS, remove_tashkeel=False))
 
+    def get_unique_chars(self):
+        return list(set("".join(self.lines)))
+
+    def get_lines_below_len(self, length: int):
+        return list(filter(self.lines, lambda line: len(line) < length))
+
+    def get_lines_above_len(self, length: int):
+        return list(filter(self.lines, lambda line: len(line) > length))
+
+    def get_lines_with_len(self, length: int):
+        return list(filter(self.lines, lambda line: len(line) == length))
+
 
 class FileCleaner(TextCleaner):
-    pass
+    def __init__(self, filepath: str, sep="\n", encoding="utf8") -> None:
+
+        self.file = open(filepath, "r", encoding=encoding)
+        super().__init__(self.file.read(), sep)
 
 
 class FolderCleaner(BaseCleaner):
