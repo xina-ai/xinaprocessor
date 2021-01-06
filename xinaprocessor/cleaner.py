@@ -1,8 +1,8 @@
 import random
 from typing import Text
-from base import BaseCleaner
-from constants import ARABIC_CHARS
-from helper import *
+from xinaprocessor.base import BaseCleaner
+from xinaprocessor.constants import ARABIC_CHARS
+from xinaprocessor.helper import *
 
 
 class TextCleaner(BaseCleaner):
