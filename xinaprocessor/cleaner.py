@@ -287,7 +287,9 @@ class TextCleaner(BaseCleaner):
 
     def get_lines_with_len(self, length: int):
         return list(filter(self.lines, lambda line: len(line) == length))
+    # endregion
 
+    #region object operations
     def __add__(self, other):
         new_object = TextCleaner(text = "")
         new_object.lines = self.lines + other.lines
@@ -302,8 +304,14 @@ class TextCleaner(BaseCleaner):
         new_object.raw_text = new_object.text
         return new_object
 
+    def __iadd__(self, other):
+        self.lines += other.lines
+        return self
 
-    # endregion
+    def __neg__(self):
+        self.lines = self.lines[::-1]
+        return self
+    #endregion
 
 class FileCleaner(TextCleaner):
     def __init__(self, filepath: str, sep="\n", encoding="utf8") -> None:
@@ -323,9 +331,4 @@ class StreamCleaner(TextCleaner):
 class TwitterCleaner(BaseCleaner):
     pass
 
-if __name__ == '__main__':
-    cleaner1 = TextCleaner("النص هنا")
-    cleaner2 = TextCleaner("النص أيضا هنا")
-    result = cleaner1 + cleaner2
-    print(result.lines)
-    print(result.text)
+
