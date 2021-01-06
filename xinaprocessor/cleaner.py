@@ -1,8 +1,8 @@
 import random
 from typing import Text
-from xinaprocessor.base import BaseCleaner
-from xinaprocessor.constants import ARABIC_CHARS
-from xinaprocessor.helper import *
+from base import BaseCleaner
+from constants import ARABIC_CHARS
+from helper import *
 
 
 class TextCleaner(BaseCleaner):
@@ -268,7 +268,21 @@ class TextCleaner(BaseCleaner):
     def get_lines_with_len(self, length: int):
         return list(filter(self.lines, lambda line: len(line) == length))
 
+    def __add__(self, other):
+        new_object = TextCleaner(text = "")
+        new_object.lines = self.lines + other.lines
+        new_object.raw_lines = new_object.lines
+        new_object.raw_text = new_object.text
+        return new_object
 
+    def __sub__(self, other):
+        new_object = TextCleaner(text = "")
+        new_object.lines = [line for line in self.lines if line not in other.lines] + [line for line in self.other if line not in self.lines]
+        new_object.raw_lines = new_object.lines
+        new_object.raw_text = new_object.text
+        return new_object
+
+    
 class FileCleaner(TextCleaner):
     def __init__(self, filepath: str, sep="\n", encoding="utf8") -> None:
 
@@ -286,3 +300,10 @@ class StreamCleaner(TextCleaner):
 
 class TwitterCleaner(BaseCleaner):
     pass
+
+if __name__ == '__main__':
+    cleaner1 = TextCleaner("النص هنا")
+    cleaner2 = TextCleaner("النص أيضا هنا")
+    result = cleaner1 + cleaner2
+    print(result.lines)
+    print(result.text)

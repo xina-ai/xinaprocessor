@@ -1,7 +1,7 @@
 from constants import *
 import re
 import emoji
-
+import random
 
 def replace_list(list_chars, text, replace_with=""):
     chars = "".join(list_chars)
@@ -43,3 +43,4 @@ def replace_repeated_chars(text: str, repeated=1, keep_char=1):
     assert keep_char >= 0
     pattern = r"(.)\1{}".format(f"{{{repeated},}}")
     return re.sub(pattern, r"\1" * keep_char, text)
+
