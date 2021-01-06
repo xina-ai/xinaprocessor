@@ -15,33 +15,6 @@ class TextCleaner(BaseCleaner):
         self.sep = sep
         self._split_text(sep)
 
-    def __len__(self):
-        return len(self.lines)
-
-    def _clean(self, keep):
-        """Clean the text by keeping only "keep" string.
-        If sep is not None, text will be splitted into a list.
-
-        Args:
-            keep (str, optional): string of characters to keep. Defaults to ARABIC_CHARS.
-            sep (str, optional): separator to split text on. Defaults to \n.
-        Returns:
-            TextCleaner: self
-        """
-        assert keep is not None
-        if type(keep) != list:
-            keep = list(keep)
-        self.lines = self._mapper(self.lines, lambda x: keep_only(x, keep))
-
-        return self
-
-    @property
-    def text(self):
-        return self.sep.join(self.lines)
-
-    def get_text(self):
-        return self.text
-
     # region remove functions
     def remove_english_text(self):
         return self._remove(ENGLISH_CHARS)
@@ -83,13 +56,13 @@ class TextCleaner(BaseCleaner):
         return self._remove(TATWEEL)
 
     def remove_extra_spaces(self, keep_space=1):
-        return self._map(self.lines, lambda line: remove_extra_spaces(line, keep_space))
+        return self._map_lines(lambda line: remove_extra_spaces(line, keep_space))
 
     def remove_emojis(self):
-        return self._map(self.lines, remove_emoji)
+        return self._map_lines(remove_emoji)
 
     def remove_hashtags(self):
-        return self._map(self.lines, remove_hashtags)
+        return self._map_lines(remove_hashtags)
 
     def remove_quranic_annotations(self):
         return self._remove(QURANIC_ANNOTATION)
@@ -98,10 +71,14 @@ class TextCleaner(BaseCleaner):
         return self._remove(HONORIFIC_SIGN)
 
     def remove_links(self):
-        return self._map(self.lines, remove_links)
+        return self._map_lines(remove_links)
 
     def remove_mentions(self):
-        return self._map(self.lines, remove_mentions)
+        return self._map_lines(remove_mentions)
+
+    def remove_duplicates(self):
+        self.lines = list(dict.fromkeys(self.lines))
+        return self
 
     def remove_single_char(self):
         """Remove words of a single character
@@ -114,20 +91,9 @@ class TextCleaner(BaseCleaner):
             print(remove_single_char(inp))
                 'hello you?'
         """
-        return self._map(self.lines, remove_single_char)
+        return self._map_lines(remove_single_char)
 
     # endregion
-    def split_on(self, symbol):
-        """ Further split each line by the input "symbol"
-        """
-        lines = self._map(self.lines, lambda x: x.split(symbol))
-        self.lines = [item for line in lines for item in line]
-
-    def replace_repeated_chars(self, repeated=1, keep_char=1):
-        return self._map(
-            self.lines, lambda line: replace_repeated_chars(line, repeated, keep_char)
-        )
-
     # region filter functions
     def remove_empty_lines(self):
         return self.filter_lines_below_len(1)
@@ -147,53 +113,41 @@ class TextCleaner(BaseCleaner):
     def filter_lines_contain(self, char: int):
         return self._filter(self.lines, lambda line: char in line)
 
-    def _filter(self, inp_list, fn):
-        assert type(inp_list) == list
-        self.lines = list(filter(fn, inp_list))
-        return self
-
     # endregion
-
-    def _map(self, inp_list, fn):
-        self.lines = self._mapper(inp_list, fn)
-        return self
-
-    def strip(self):
-        return self._map(self.lines, str.strip)
-
-    def _remove(self, remove):
-        assert remove is not None
-        if type(remove) != list:
-            remove = list(remove)
-        return self._map(self.lines, lambda x: replace_list(x, remove))
-
-    def _mapper(self, list_map, fn):
-        assert type(list_map) == list
-        return list(map(fn, list_map))
-
-    def _split_text(self, sep):
-        self.raw_lines = self.raw_text.strip().split(sep)
-        self.lines = self.raw_lines
-        self.strip()
-
-    def get_lines(self, sep="\n"):
-        return self.lines
+    # region internal functions
 
     def __getitem__(self, item):
         assert item > -1 and item < len(self), "Index must be in range."
         return self.lines[item]
 
-    def sample(self, num_samples=1):
-        assert num_samples > 0 and num_samples < len(self)
-        return random.sample(self.cleaned_data, num_samples)
+    def __len__(self):
+        return len(self.lines)
 
-    def head(self, num_samples=1):
-        assert num_samples > -1 and num_samples < len(self)
-        return self.lines[:num_samples]
+    def _clean(self, keep):
+        """Clean the text by keeping only "keep" string.
+        If sep is not None, text will be splitted into a list.
 
-    def tail(self, num_samples=1):
-        assert num_samples > -1 and num_samples < len(self)
-        return self.lines[-num_samples:]
+        Args:
+            keep (str, optional): string of characters to keep. Defaults to ARABIC_CHARS.
+            sep (str, optional): separator to split text on. Defaults to \n.
+        Returns:
+            TextCleaner: self
+        """
+        assert keep is not None
+        if type(keep) != list:
+            keep = list(keep)
+        self.lines = self._mapper(self.lines, lambda x: keep_only(x, keep))
+
+        return self
+
+    def _filter(self, inp_list, fn):
+        assert type(inp_list) == list
+        self.lines = list(filter(fn, inp_list))
+        return self
+
+    def _keep_only(self, to_keep, remove_tashkeel=True, remove_tatweel=True):
+        self.lines = self._get(self, to_keep, remove_tashkeel=True, remove_tatweel=True)
+        return self
 
     def _get(self, to_keep, remove_tashkeel=True, remove_tatweel=True):
         if type(to_keep) != list:
@@ -204,10 +158,58 @@ class TextCleaner(BaseCleaner):
             self.remove_tatweel()
         return self._mapper(self.lines, lambda line: keep_only(line, to_keep))
 
-    def _keep_only(self, to_keep, remove_tashkeel=True, remove_tatweel=True):
-        self.lines = self._get(self, to_keep, remove_tashkeel=True, remove_tatweel=True)
+    def _split_text(self, sep):
+        self.raw_lines = self.raw_text.strip().split(sep)
+        self.lines = self.raw_lines
+        self.strip()
+
+    def _map(self, inp_list, fn):
+        self.lines = self._mapper(inp_list, fn)
         return self
 
+    def _map_lines(self, fn):
+        return self._map(self.lines, fn)
+
+    def _mapper(self, list_map, fn):
+        assert type(list_map) == list
+        return list(map(fn, list_map))
+
+    def _remove(self, remove):
+        assert remove is not None
+        if type(remove) != list:
+            remove = list(remove)
+        return self._map_lines(lambda x: replace_list(x, remove))
+
+    # endregion
+    # region additional functions
+    def sample(self, num_samples=1):
+        assert num_samples > 0 and num_samples < len(self)
+        return random.sample(self.cleaned_data, num_samples)
+
+    def split_on(self, symbol):
+        """ Further split each line by the input "symbol"
+        """
+        lines = self._map_lines(lambda x: x.split(symbol))
+        self.lines = [item for line in lines for item in line]
+
+    def replace_repeated_chars(self, repeated=1, keep_char=1):
+        return self._map_lines(
+            lambda line: replace_repeated_chars(line, repeated, keep_char)
+        )
+
+    def strip(self):
+        return self._map_lines(str.strip)
+
+    def head(self, num_samples=1):
+        assert num_samples > -1 and num_samples < len(self)
+        return self.lines[:num_samples]
+
+    def tail(self, num_samples=1):
+        assert num_samples > -1 and num_samples < len(self)
+        return self.lines[-num_samples:]
+
+    # endregion
+    # region keep functions
     def keep_arabic_only(self):
         return self._keep_only(ARABIC_CHARS)
 
@@ -226,8 +228,21 @@ class TextCleaner(BaseCleaner):
     def keep_english_and_numbers_only(self):
         return self._keep_only(ENGLISH_CHARS + ENGLISH_NUM)
 
+    # endregion
+    # region get functions
+
+    @property
+    def text(self):
+        return self.sep.join(self.lines)
+
+    def get_text(self):
+        return self.text
+
     def get_row_text(self):
         return self.raw_text
+
+    def get_lines(self, sep="\n"):
+        return self.lines
 
     def get_arabic_text(self):
         """Extract the Arabic text only.
@@ -272,6 +287,9 @@ class TextCleaner(BaseCleaner):
 
     def get_lines_with_len(self, length: int):
         return list(filter(self.lines, lambda line: len(line) == length))
+
+
+# endregion
 
 
 class FileCleaner(TextCleaner):
