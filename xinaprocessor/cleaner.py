@@ -42,6 +42,7 @@ class TextCleaner(BaseCleaner):
     def get_text(self):
         return self.text
 
+    # region remove functions
     def remove_english_text(self):
         return self._remove(ENGLISH_CHARS)
 
@@ -115,6 +116,7 @@ class TextCleaner(BaseCleaner):
         """
         return self._map(self.lines, remove_single_char)
 
+    # endregion
     def split_on(self, symbol):
         """ Further split each line by the input "symbol"
         """
@@ -126,6 +128,7 @@ class TextCleaner(BaseCleaner):
             self.lines, lambda line: replace_repeated_chars(line, repeated, keep_char)
         )
 
+    # region filter functions
     def remove_empty_lines(self):
         return self.filter_lines_below_len(1)
 
@@ -144,17 +147,19 @@ class TextCleaner(BaseCleaner):
     def filter_lines_contain(self, char: int):
         return self._filter(self.lines, lambda line: char in line)
 
-    def strip(self):
-        return self._map(self.lines, str.strip)
+    def _filter(self, inp_list, fn):
+        assert type(inp_list) == list
+        self.lines = list(filter(fn, inp_list))
+        return self
+
+    # endregion
 
     def _map(self, inp_list, fn):
         self.lines = self._mapper(inp_list, fn)
         return self
 
-    def _filter(self, inp_list, fn):
-        assert type(inp_list) == list
-        self.lines = list(filter(fn, inp_list))
-        return self
+    def strip(self):
+        return self._map(self.lines, str.strip)
 
     def _remove(self, remove):
         assert remove is not None
@@ -174,8 +179,8 @@ class TextCleaner(BaseCleaner):
     def get_lines(self, sep="\n"):
         return self.lines
 
-    def __item__(self, item):
-        assert item > -1 and item < len(self)
+    def __getitem__(self, item):
+        assert item > -1 and item < len(self), "Index must be in range."
         return self.lines[item]
 
     def sample(self, num_samples=1):
