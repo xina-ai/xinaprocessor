@@ -1,20 +1,21 @@
 from xinaprocessor.constants import *
 from xinaprocessor.helper import *
-import random
-import warnings
 from typing import List
-from tqdm import tqdm
+from xinaprocessor.classes import Sequential
 
 
 class BaseCleaner:
-    def __init__(self, lines: List[str]) -> None:
+    def __init__(self, lines: List[str], stream=False) -> None:
         """Base class for all cleaners, it contains all basic functionality of the cleaner
 
         Args:
             lines (List[str]): list of strings
+            stream (bool): whether to use streaming or not
         """
         super().__init__()
         self.lines = lines  # text to be processed
+        self.stream = stream
+        self._sequential = Sequential()  # used for streaming
 
     # region remove functions
     def remove_english_text(self):
@@ -77,10 +78,6 @@ class BaseCleaner:
     def remove_mentions(self):
         return self._map_lines(remove_mentions)
 
-    def remove_duplicates(self):
-        self.lines = list(dict.fromkeys(self.lines))
-        return self
-
     def remove_single_char(self):
         """Remove words of a single character
 
@@ -97,34 +94,21 @@ class BaseCleaner:
     # endregion
     # region internal functions
 
-    def _clean(self, keep):
-        """Clean the text by keeping only "keep" string.
-        If sep is not None, text will be splitted into a list.
+    def _filter_lines(self, fn):
+        return self._filter_map(self.lines, fn)
 
-        Args:
-            keep (str, optional): string of characters to keep. Defaults to ARABIC_CHARS.
-            sep (str, optional): separator to split text on. Defaults to \n.
-        Returns:
-            TextCleaner: self
-        """
-        assert keep is not None
-        if type(keep) != list:
-            keep = list(keep)
-        self.lines = self._mapper(self.lines, lambda x: keep_only(x, keep))
-
-        return self
-
-    def _filter(self, inp_list, fn):
+    def _filter_map(self, inp_list, fn):
         assert type(inp_list) == list
-        self.lines = list(filter(fn, inp_list))
+        if self.stream:
+            self._sequential.add(fn, filter)
+            return self
+        else:
+            self.lines = list(filter(fn, inp_list))
         return self
 
     def _keep_only(self, to_keep, remove_tashkeel=True, remove_tatweel=True):
         self.lines = self._get(
-            self,
-            to_keep,
-            remove_tashkeel=remove_tashkeel,
-            remove_tatweel=remove_tatweel,
+            to_keep, remove_tashkeel=remove_tashkeel, remove_tatweel=remove_tatweel,
         )
         return self
 
@@ -137,11 +121,6 @@ class BaseCleaner:
             self.remove_tatweel()
         return self._mapper(self.lines, lambda line: keep_only(line, to_keep))
 
-    def _split_text(self, sep):
-        self.lines = self.raw_text.strip().split(sep)
-        self.strip()
-        return self.lines
-
     def _map(self, inp_list, fn):
         self.lines = self._mapper(inp_list, fn)
         return self
@@ -151,7 +130,12 @@ class BaseCleaner:
 
     def _mapper(self, list_map, fn):
         assert type(list_map) == list
-        return list(map(fn, list_map))
+
+        if self.stream:
+            self._sequential.add(fn, map)
+            return self.lines
+        else:
+            return list(map(fn, list_map))
 
     def _remove(self, remove):
         assert remove is not None
@@ -168,35 +152,34 @@ class BaseCleaner:
     # endregion
     # region filter functions
     def remove_empty_lines(self):
-        return self.filter_lines_below_len(1)
+        return self.remove_lines_below_len(1)
 
-    def remove_lines_below_len(self, length: int):
-        return self._filter(self.lines, lambda line: len(line) < length)
+    def remove_lines_below_len(self, length: int, word_level=True):
+        filter_fn = (
+            lambda line: (len(line.split()) if word_level else len(line)) >= length
+        )
+        return self._filter_lines(filter_fn)
 
-    def remove_lines_above_len(self, length: int):
-        return self._filter(self.lines, lambda line: len(line) > length)
+    def remove_lines_above_len(self, length: int, word_level=True):
+        filter_fn = (
+            lambda line: (len(line.split()) if word_level else len(line)) <= length
+        )
+        return self._filter_lines(filter_fn)
 
-    def remove_lines_with_len(self, length: int):
-        return self._filter(self.lines, lambda line: len(line) == length)
+    def remove_lines_with_len(self, length: int, word_level=True):
+        filter_fn = (
+            lambda line: (len(line.split()) if word_level else len(line)) != length
+        )
+        return self._filter_lines(filter_fn)
 
     def remove_lines_contain(self, char: int):
-        return self._filter(self.lines, lambda line: char not in line)
+        return self._filter_lines(lambda line: char not in line)
 
     def keep_lines_contain(self, char: int):
-        return self._filter(self.lines, lambda line: char in line)
+        return self._filter_lines(lambda line: char in line)
 
     # endregion
     # region additional functions
-    def sample(self, num_samples=1, seed=0):
-        assert num_samples > 0 and num_samples < len(self)
-        random.seed(seed)
-        return random.sample(self.cleaned_data, num_samples,)
-
-    def split_on(self, symbol):
-        """ Further split each line by the input "symbol"
-        """
-        lines = self._map_lines(lambda x: x.split(symbol))
-        self.lines = [item for line in lines for item in line]
 
     def replace_repeated_chars(self, repeated=1, keep_char=1):
         return self._map_lines(
@@ -206,18 +189,13 @@ class BaseCleaner:
     def strip(self):
         return self._map_lines(str.strip)
 
-    def head(self, num_samples=1):
-        assert num_samples > -1 and num_samples < len(self)
-        return self.lines[:num_samples]
-
-    def tail(self, num_samples=1):
-        assert num_samples > -1 and num_samples < len(self)
-        return self.lines[-num_samples:]
-
     # endregion
     # region keep functions
     def keep_arabic_only(self):
         return self._keep_only(ARABIC_CHARS)
+
+    def keep_numbers_only(self):
+        return self._keep_only(ARABIC_NUM + ENGLISH_NUM)
 
     def keep_english_only(self):
         return self._keep_only(ENGLISH_CHARS)
@@ -237,20 +215,8 @@ class BaseCleaner:
     # endregion
     # region get functions
 
-    def get_lines(self, sep="\n"):
+    def get_lines(self):
         return self.lines
-
-    def get_unique_chars(self):
-        return list(set("".join(self.lines)))
-
-    def get_lines_below_len(self, length: int):
-        return list(filter(self.lines, lambda line: len(line) < length))
-
-    def get_lines_above_len(self, length: int):
-        return list(filter(self.lines, lambda line: len(line) > length))
-
-    def get_lines_with_len(self, length: int):
-        return list(filter(self.lines, lambda line: len(line) == length))
 
     # endregion
     # region object operations
@@ -292,6 +258,11 @@ class BaseCleaner:
 
     def denormalize(self):
         return self.denormalize_alef().denormalize_hamza()
+
+    # endregion
+    # region general clean functions
+    def clean_twitter_data(self):
+        return self.remove_hashtags().remove_mentions().remove_links()
 
     # endregion
 
