@@ -9,6 +9,17 @@ HARAKAT_MAIN = [
     "\u0651",  # Shadda
     "\u0652",  # Sukun
 ]
+ALEF_CHARS = "إأٱآاى" + "\u0670"  # Arabic Letter Superscript Alef
+NORMAL_ALEF = "ا"
+HAMZA_CHARS = "ءؤئ" + "\u0655\u0656"  # Arabic Hamza Above and Below
+NORMAL_HAMZA = "ء"
+LAM_ALEF_COMBINED = [
+    "\ufef9",  # Lam Alef
+    "\ufef7",  # Lam Alef Hamza Above
+    "\ufef9",  # Lam Alef Hamza Below
+    "\ufef5",  # Lam Alef Madda Above
+]
+LAM_ALEF_NORMAL = "\u0644\u0627"  # ﻻ
 HARAKAT_OTHERS = [
     "\u0653",  # Arabic Maddah Above
     "\u0654",  # Arabic Hamza Above
