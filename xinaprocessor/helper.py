@@ -3,7 +3,6 @@ import re
 import emoji
 import random
 
-
 def replace_list(list_chars, text, replace_with=""):
     chars = "".join(list_chars)
     return re.sub(f"[{chars}]", replace_with, text)
@@ -45,20 +44,19 @@ def replace_repeated_chars(text: str, repeated=1, keep_char=1):
     pattern = r"(.)\1{}".format(f"{{{repeated},}}")
     return re.sub(pattern, r"\1" * keep_char, text)
 
-
-def train_test_split(x: list, test_size: float, random_seed=None):
-    assert test_size > 0.0 and test_size < 1.0, "test size sould be between 0 and 1"
+def train_test_split(x: list, test_size: float, random_seed = None):
+    assert  test_size > 0.0 and test_size < 1.0 , "test size sould be between 0 and 1"
     assert len(x) > 1, "the length of the given list should be greater than 1"
     if random_seed:
         random.random(random_seed).shuffle(x)
     else:
         random.shuffle(x)
-    test = x[: int(len(x) * test_size)]
-    train = x[int(len(x) * test_size) :]
+    test = x[: int(len(x)*test_size)]
+    train = x[int(len(x)*test_size):]
     return train, test
 
-
-def export_text(file_path, data: list, sep="\n", encoding="utf-8"):
-    with open(file_path, "a", encoding=encoding) as f:
+def export_text(file_path, data: list, sep = "\n", encoding = "utf-8"):
+    with open(file_path, "a", encoding = encoding) as f:
         f.write(sep.join(data))
+
 
