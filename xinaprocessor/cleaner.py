@@ -218,5 +218,20 @@ class FileStreamCleaner(BaseCleaner):
             del self.file, self.savefile
 
 
-class FolderStreamCleaner(FileStreamCleaner):
-    pass
+class FolderStreamCleaner:
+    def __init__(
+        self, folderdir: str, savedir: str = None, include_subdir=False, encoding="utf8"
+    ):
+        self.folderdir = folderdir
+        self.savedir = savedir
+        self.include_subdir = include_subdir
+        self.encoding = encoding
+        self.files = []
+
+    def get_files(self):
+        if len(self.files) == 0:
+            for path, _, filenames in os.walk(self.folderdir):
+                self.files += [os.path.join(path, filename) for filename in filenames]
+                if not self.include_subdir:
+                    break
+        return self.files
