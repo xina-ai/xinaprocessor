@@ -151,11 +151,17 @@ class FolderCleaner(BaseCleaner):
 
 
 class FileStreamCleaner(BaseCleaner):
-    def __init__(self, filepath: str, savepath: str, encoding="utf8") -> None:
+    def __init__(self, filepath: str, savepath: str = None, encoding="utf8") -> None:
 
         self.filepath = filepath
         self.encoding = encoding
 
+        if not savepath:
+            input_filename = os.path.splitext(os.path.basename(filepath))[0]
+            input_extention = os.path.splitext(os.path.basename(filepath))[1]
+            savepath = os.path.join(
+                os.path.dirname(filepath), input_filename + f"_cleaned{input_extention}"
+            )
         assert os.path.isfile(filepath), "File does not exist."
         assert not os.path.isfile(savepath), "File already exists."
 
