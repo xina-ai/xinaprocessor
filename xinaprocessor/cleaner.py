@@ -1,8 +1,7 @@
 import random
-from typing import Text
 from xinaprocessor.base import BaseCleaner
-from xinaprocessor.constants import ARABIC_CHARS
 from xinaprocessor.helper import *
+import warnings
 
 
 class TextCleaner(BaseCleaner):
@@ -110,18 +109,11 @@ class TextCleaner(BaseCleaner):
     def remove_lines_contain(self, char: int):
         return self._filter(self.lines, lambda line: char not in line)
 
-    def filter_lines_contain(self, char: int):
+    def keep_lines_contain(self, char: int):
         return self._filter(self.lines, lambda line: char in line)
 
     # endregion
     # region internal functions
-
-    def __getitem__(self, item):
-        assert item > -1 and item < len(self), "Index must be in range."
-        return self.lines[item]
-
-    def __len__(self):
-        return len(self.lines)
 
     def _clean(self, keep):
         """Clean the text by keeping only "keep" string.
@@ -178,13 +170,20 @@ class TextCleaner(BaseCleaner):
         assert remove is not None
         if type(remove) != list:
             remove = list(remove)
-        return self._map_lines(lambda x: replace_list(x, remove))
+        return self._map_lines(lambda line: replace_list(remove, line))
+
+    def _replace(self, replace, rep_with):
+        assert replace is not None
+        if type(replace) != list:
+            replace = list(replace)
+        return self._map_lines(lambda line: replace_list(replace, line, rep_with))
 
     # endregion
     # region additional functions
-    def sample(self, num_samples=1):
+    def sample(self, num_samples=1, seed=0):
         assert num_samples > 0 and num_samples < len(self)
-        return random.sample(self.cleaned_data, num_samples)
+        random.seed(seed)
+        return random.sample(self.cleaned_data, num_samples,)
 
     def split_on(self, symbol):
         """ Further split each line by the input "symbol"
@@ -287,19 +286,36 @@ class TextCleaner(BaseCleaner):
 
     def get_lines_with_len(self, length: int):
         return list(filter(self.lines, lambda line: len(line) == length))
-    # endregion
 
-    #region object operations
+    # endregion
+    # region object operations
     def __add__(self, other):
-        new_object = TextCleaner(text = "")
+        if self.sep != other.sep:
+            warnings.warn(
+                f"Unequal separators detected, using {self.sep} as a new separator."
+            )
+        new_object = TextCleaner(text="", sep=self.sep)
         new_object.lines = self.lines + other.lines
         new_object.raw_lines = new_object.lines
         new_object.raw_text = new_object.text
         return new_object
 
+    def __getitem__(self, item):
+        assert item > -1 and item < len(self), "Index must be in range."
+        return self.lines[item]
+
+    def __len__(self):
+        return len(self.lines)
+
     def __sub__(self, other):
-        new_object = TextCleaner(text = "")
-        new_object.lines = [line for line in self.lines if line not in other.lines] + [line for line in self.other if line not in self.lines]
+        if self.sep != other.sep:
+            warnings.warn(
+                f"Unequal separators detected, using {self.sep} as a new separator."
+            )
+        new_object = TextCleaner(text="", sep=self.sep)
+        new_object.lines = [line for line in self.lines if line not in other.lines] + [
+            line for line in other.lines if line not in self.lines
+        ]
         new_object.raw_lines = new_object.lines
         new_object.raw_text = new_object.text
         return new_object
@@ -311,7 +327,32 @@ class TextCleaner(BaseCleaner):
     def __neg__(self):
         self.lines = self.lines[::-1]
         return self
-    #endregion
+
+    # endregion
+    # region normalize functions
+    def normalize_lamalef(self):
+        return self._replace(LAM_ALEF_COMBINED, LAM_ALEF_NORMAL)
+
+    def normalize_hamza(self):
+        return self._replace(HAMZA_CHARS, NORMAL_HAMZA)
+
+    def normalize_alef(self):
+        return self._replace(ALEF_CHARS, NORMAL_ALEF)
+
+    def normalize(self):
+        return self.normalize_lamalef().normalize_alef().normalize_hamza()
+
+    def denormalize_hamza(self):
+        return self._replace(HAMZA_CHARS, f"[{HAMZA_CHARS}]")
+
+    def denormalize_alef(self):
+        return self._replace(ALEF_CHARS, f"[{ALEF_CHARS}]")
+
+    def denormalize(self):
+        return self.denormalize_alef().denormalize_hamza()
+
+    # endregion
+
 
 class FileCleaner(TextCleaner):
     def __init__(self, filepath: str, sep="\n", encoding="utf8") -> None:
@@ -330,5 +371,3 @@ class StreamCleaner(TextCleaner):
 
 class TwitterCleaner(BaseCleaner):
     pass
-
-
