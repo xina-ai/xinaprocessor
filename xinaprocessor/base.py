@@ -262,10 +262,12 @@ class BaseCleaner:
         return self.denormalize_alef().denormalize_hamza()
 
     # endregion
-    # region general clean functions
-    def clean_twitter_data(self):
-        return self.remove_hashtags().remove_mentions().remove_links()
+    # region general pipeline clean functions
+    def twitter_pipeline(self):
+        return self.strip().remove_hashtags().remove_mentions().remove_links()
 
+    def twitter_arabic_pipeline(self):
+        return self.twitter_pipeline().keep_arabic_only().replace_repeated_chars(3, 2).remove_empty_lines()
     # endregion
 
 
