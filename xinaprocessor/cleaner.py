@@ -11,7 +11,7 @@ class TextCleaner(BaseCleaner):
     def __init__(self, text: str, sep="\n") -> None:
 
         super().__init__([])
-        self._raw_text = text
+        self.raw_text = text
         self.sep = sep
         self.raw_lines = self._split_text(sep)
 
@@ -19,16 +19,8 @@ class TextCleaner(BaseCleaner):
     def text(self):
         return self.sep.join(self.lines)
 
-    @property
-    def raw_text(self):
-        return self.sep.join(self.raw_lines)
-
     def get_text(self):
         return self.text
-
-    @raw_text.setter
-    def raw_text(self, value):
-        self._raw_text = value
 
     def get_arabic_text(self):
         """Extract the Arabic text only.
@@ -98,7 +90,7 @@ class TextCleaner(BaseCleaner):
         return self
 
     def _split_text(self, sep):
-        self.lines = self._raw_text.strip().split(sep)
+        self.lines = self.raw_text.strip().split(sep)
         self.strip()
         return self.lines
 
