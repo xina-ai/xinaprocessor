@@ -147,7 +147,7 @@ class FolderCleaner(BaseCleaner):
 
 class FileStreamCleaner(BaseCleaner):
     def __init__(self, filepath: str, savepath: str = None, encoding="utf8",
-                 sep: str = None, clean_columns: List[int] = None) -> None:
+                 sep: str = None, columns: List[int] = None, header: bool = None) -> None:
         """Clean file in a streaming manner (fast + memory efficient)
 
         Args:
@@ -155,12 +155,14 @@ class FileStreamCleaner(BaseCleaner):
             savepath (str, optional): path to save processed text. Defaults to None (saved in the same directory of filepath).
             encoding (str, optional): encoding of the input file. Defaults to "utf8".
             sep (str, optional): to split coulmns when needed. Defaults to None.
-            clean_columns (List[int], optional): index of the column to be processed. Defaults to None.
+            columns (List[int], optional): index of the column to be processed. Defaults to None.
+            header (bool, optional): true if the file contains header. Defaults to None.
         """
         self.filepath = filepath
         self.encoding = encoding
         self.sep = sep
-        self.clean_columns = clean_columns
+        self.columns = columns if columns else []
+
         if not savepath:
             input_filename = os.path.splitext(os.path.basename(filepath))[0]
             input_extention = os.path.splitext(os.path.basename(filepath))[1]
@@ -169,15 +171,37 @@ class FileStreamCleaner(BaseCleaner):
                 f"_cleaned{input_extention}"
             )
         assert os.path.isfile(filepath), "File does not exist."
-        assert not os.path.isfile(savepath), "File already exists."
+        # assert not os.path.isfile(savepath), "File already exists."
 
         self.file = open(filepath, "r", encoding=encoding)
         self.savefile = open(savepath, "w", encoding=encoding)
+        self._handle_header(header)
         super().__init__([], True)
 
-    def read_line(self):
-        for line in self.file:
-            yield line
+    def _handle_header(self, header):
+        self.header = next(self._read_line()) if header else None
+        if header:
+            self._save_lines(self.header)
+
+    def _read_line(self):
+        if len(self.columns):
+            for line in self.file:
+                line = line.split(self.sep)
+                line = [line[i] for i in self.columns]
+                yield line
+        else:
+            for line in self.file:
+                yield line
+
+    def _save_lines(self, lines: List[str]):
+        col_len = max(1, len(self.columns))
+        for i in range(0, len(lines), col_len):
+            self.savefile.writelines(
+                "%s\n" % l for l in lines[i:i+col_len])
+
+    def _apply_and_save(self, lines):
+        cleaned = self._sequential.apply(lines)
+        self._save_lines(cleaned)
 
     def clean(self, n_lines=10):
         """Clean the input file by applying all selected functions in sequence.
@@ -196,19 +220,15 @@ class FileStreamCleaner(BaseCleaner):
             position=0,
             leave=True,
         ) as pbar:
-            for i, line in enumerate(self.read_line(), 1):
+            for i, line in enumerate(self._read_line(), 1):
                 pbar.update(len(line.encode(self.encoding)))
-                lines.append(line)
+                lines.extend(line)
                 if i % n_lines == 0:
                     self._apply_and_save(lines)
                     lines = []
 
             if len(lines) > 0:
                 self._apply_and_save(lines)
-
-    def _apply_and_save(self, lines):
-        cleaned = self._sequential.apply(lines)
-        self.savefile.writelines("%s\n" % l for l in cleaned)
 
     def clean_sample(self, n_lines=1000):
         """Clean a sample of the input file by applying all selected functions in sequence.
@@ -217,8 +237,8 @@ class FileStreamCleaner(BaseCleaner):
             n_lines (int, optional): number of lines to be processed at the same time. Defaults to 1000.
         """
         lines = []
-        for i, line in enumerate(self.file, 1):
-            lines.append(line)
+        for i, line in enumerate(self._read_line(), 1):
+            lines.extend(line)
             if i % n_lines == 0:
                 self._apply_and_save(lines)
                 break
