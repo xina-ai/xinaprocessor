@@ -1,4 +1,4 @@
-from constants import *
+from xinaprocessor.constants import *
 import re
 import emoji
 import random
