@@ -12,7 +12,6 @@ class BaseCleaner:
             lines (List[str]): list of strings
             stream (bool): whether to use streaming or not
         """
-        super().__init__()
         self.lines = lines  # text to be processed
         self.stream = stream
         self._sequential = Sequential()  # used for streaming
@@ -156,19 +155,22 @@ class BaseCleaner:
 
     def remove_lines_below_len(self, length: int, word_level=True):
         filter_fn = (
-            lambda line: (len(line.split()) if word_level else len(line)) >= length
+            lambda line: (len(line.split())
+                          if word_level else len(line)) >= length
         )
         return self._filter_lines(filter_fn)
 
     def remove_lines_above_len(self, length: int, word_level=True):
         filter_fn = (
-            lambda line: (len(line.split()) if word_level else len(line)) <= length
+            lambda line: (len(line.split())
+                          if word_level else len(line)) <= length
         )
         return self._filter_lines(filter_fn)
 
     def remove_lines_with_len(self, length: int, word_level=True):
         filter_fn = (
-            lambda line: (len(line.split()) if word_level else len(line)) != length
+            lambda line: (len(line.split())
+                          if word_level else len(line)) != length
         )
         return self._filter_lines(filter_fn)
 
