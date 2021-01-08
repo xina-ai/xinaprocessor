@@ -6,10 +6,11 @@ with open('requirements.txt') as f:
 
 setup(
     name='xinaprocessor',
-    version='0.1.0',
+    version='0.1.1',
     install_requires=required,
     tests_require=['pytest'],
     author="Xina AI",
+    url='https://github.com/xina-ai/xinaprocessor',
     description="Arabic processing library",
     packages=find_packages(include=['xinaprocessor'])
 )
