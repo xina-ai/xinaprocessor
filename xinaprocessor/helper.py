@@ -50,7 +50,7 @@ def keep_only(text: str, list_chars):
 def replace_repeated_chars(text: str, repeated=1, keep_char=1):
     assert repeated > 0
     assert keep_char >= 0
-    pattern = r"(.)\1{}".format(f"{{{repeated},}}")
+    pattern = r"(.)\1{}".format(f"{{{repeated-1},}}")
     return re.sub(pattern, r"\1" * keep_char, text)
 
 

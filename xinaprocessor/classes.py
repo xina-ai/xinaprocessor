@@ -20,3 +20,10 @@ class Sequential:
         for op in self.operations:
             output = list(op.map_fn(op.apply_fn, output))
         return output
+
+    def __len__(self):
+        return len(self.operations)
+
+    def __getitem__(self, item):
+        assert item > -1 and item < len(self)
+        return self.operations[item]

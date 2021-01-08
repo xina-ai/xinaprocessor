@@ -183,15 +183,27 @@ class FileStreamCleaner(BaseCleaner):
         if header:
             self._save_lines(self.header)
 
-    def _read_line(self):
-        if len(self.columns):
-            for line in self.file:
-                line = line.strip().split(self.sep)
-                line = [line[i] for i in self.columns]
-                yield line
-        else:
-            for line in self.file:
-                yield line
+    def _read_line(self, pbar=None):
+
+        with tqdm(
+            total=os.path.getsize(self.filepath),
+            desc="Processing",
+            unit="B",
+            unit_scale=True,
+            file=sys.stdout,
+            position=0,
+            leave=True,
+        ) as pbar:
+            if len(self.columns):
+                for line in self.file:
+                    pbar.update(len(line.encode(self.encoding)))
+                    line = line.strip().split(self.sep)
+                    line = [line[i] for i in self.columns]
+                    yield line
+            else:
+                for line in self.file:
+                    pbar.update(len(line.encode(self.encoding)))
+                    yield [line]
 
     def _save_lines(self, lines: List[str]):
         col_len = max(1, len(self.columns))
@@ -211,24 +223,14 @@ class FileStreamCleaner(BaseCleaner):
         """
         assert len(self._sequential) > 0, "No functions to apply"
         lines = []
-        with tqdm(
-            total=os.path.getsize(self.filepath),
-            desc="Processing",
-            unit="B",
-            unit_scale=True,
-            file=sys.stdout,
-            position=0,
-            leave=True,
-        ) as pbar:
-            for i, line in enumerate(self._read_line(), 1):
-                pbar.update(len(line.encode(self.encoding)))
-                lines.extend(line)
-                if i % n_lines == 0:
-                    self._apply_and_save(lines)
-                    lines = []
-
-            if len(lines) > 0:
+        for i, line in enumerate(self._read_line(), 1):
+            lines.extend(line)
+            if i % n_lines == 0:
                 self._apply_and_save(lines)
+                lines = []
+
+        if len(lines) > 0:
+            self._apply_and_save(lines)
 
     def clean_sample(self, n_lines=1000):
         """Clean a sample of the input file by applying all selected functions in sequence.
