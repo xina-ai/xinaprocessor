@@ -33,6 +33,14 @@ def remove_single_char(text: str):
     return re.sub(r"(?:^| )\w(?:$| )", " ", text).strip()
 
 
+def remove_single_char_space_before(text: str):
+    return re.sub(r"(?:^| )(\w)(?:$| )", r"\1 ", text).strip()
+
+
+def remove_single_char_space_after(text: str):
+    return re.sub(r"(?:^| )(\w)(?:$| )", r" \1", text).strip()
+
+
 def keep_only(text: str, list_chars):
     chars = "".join(list_chars)
     spaced_text = re.sub(f"[^{chars}]", " ", text)
@@ -54,11 +62,10 @@ def train_test_split(x: list, test_size: float, random_seed=None):
     else:
         random.shuffle(x)
     test = x[: int(len(x) * test_size)]
-    train = x[int(len(x) * test_size) :]
+    train = x[int(len(x) * test_size):]
     return train, test
 
 
 def export_text(file_path, data: list, sep="\n", encoding="utf-8"):
     with open(file_path, "a", encoding=encoding) as f:
         f.write(sep.join(data))
-

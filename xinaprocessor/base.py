@@ -183,6 +183,10 @@ class BaseCleaner:
     # endregion
     # region additional functions
 
+    def connect_single_char(self, with_prev=False):
+        return self._map_lines(remove_single_char_space_before
+                               if with_prev else remove_single_char_space_after)
+
     def replace_repeated_chars(self, repeated=1, keep_char=1):
         return self._map_lines(
             lambda line: replace_repeated_chars(line, repeated, keep_char)
