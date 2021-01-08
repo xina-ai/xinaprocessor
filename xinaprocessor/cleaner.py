@@ -186,7 +186,7 @@ class FileStreamCleaner(BaseCleaner):
     def _read_line(self):
         if len(self.columns):
             for line in self.file:
-                line = line.split(self.sep)
+                line = line.strip().split(self.sep)
                 line = [line[i] for i in self.columns]
                 yield line
         else:
@@ -196,8 +196,8 @@ class FileStreamCleaner(BaseCleaner):
     def _save_lines(self, lines: List[str]):
         col_len = max(1, len(self.columns))
         for i in range(0, len(lines), col_len):
-            self.savefile.writelines(
-                "%s\n" % l for l in lines[i:i+col_len])
+            line = self.sep.join(lines[i:i+col_len])
+            self.savefile.write(line + '\n')
 
     def _apply_and_save(self, lines):
         cleaned = self._sequential.apply(lines)
