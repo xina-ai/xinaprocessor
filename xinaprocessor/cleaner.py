@@ -4,14 +4,16 @@ import warnings
 from tqdm import tqdm
 import os
 import sys
+from typing import List
 
 
 class TextCleaner(BaseCleaner):
     def __init__(self, text: str, sep="\n") -> None:
-        super().__init__()
 
-        self.raw_lines = self._split_text(sep)
+        super().__init__([])
+        self._raw_text = text
         self.sep = sep
+        self.raw_lines = self._split_text(sep)
 
     @property
     def text(self):
@@ -24,8 +26,9 @@ class TextCleaner(BaseCleaner):
     def get_text(self):
         return self.text
 
-    def get_row_text(self):
-        return self.raw_text
+    @raw_text.setter
+    def raw_text(self, value):
+        self._raw_text = value
 
     def get_arabic_text(self):
         """Extract the Arabic text only.
@@ -82,7 +85,7 @@ class TextCleaner(BaseCleaner):
     def sample(self, num_samples=1, seed=0):
         assert num_samples > 0 and num_samples < len(self)
         random.seed(seed)
-        return random.sample(self.cleaned_data, num_samples,)
+        return random.sample(self.lines, num_samples)
 
     def split_on(self, symbol):
         """ Further split each line by the input "symbol"
@@ -95,7 +98,7 @@ class TextCleaner(BaseCleaner):
         return self
 
     def _split_text(self, sep):
-        self.lines = self.raw_text.strip().split(sep)
+        self.lines = self._raw_text.strip().split(sep)
         self.strip()
         return self.lines
 
@@ -140,10 +143,10 @@ class TextCleaner(BaseCleaner):
 
 
 class FileCleaner(TextCleaner):
-    def __init__(self, filepath: str, sep="\n", encoding="utf8") -> None:
+    def __init__(self, filepath: str, encoding="utf8", sep="\n") -> None:
 
         self.file = open(filepath, "r", encoding=encoding)
-        super().__init__(self.file.read(), sep)
+        super().__init__(self.file.read(), '\n')
 
 
 class FolderCleaner(BaseCleaner):
@@ -151,16 +154,27 @@ class FolderCleaner(BaseCleaner):
 
 
 class FileStreamCleaner(BaseCleaner):
-    def __init__(self, filepath: str, savepath: str = None, encoding="utf8") -> None:
+    def __init__(self, filepath: str, savepath: str = None, encoding="utf8",
+                 sep: str = None, clean_columns: List[int] = None) -> None:
+        """Clean file in a streaming manner (fast + memory efficient)
 
+        Args:
+            filepath (str): path of the file to be processed
+            savepath (str, optional): path to save processed text. Defaults to None (saved in the same directory of filepath).
+            encoding (str, optional): encoding of the input file. Defaults to "utf8".
+            sep (str, optional): to split coulmns when needed. Defaults to None.
+            clean_columns (List[int], optional): index of the column to be processed. Defaults to None.
+        """
         self.filepath = filepath
         self.encoding = encoding
-
+        self.sep = sep
+        self.clean_columns = clean_columns
         if not savepath:
             input_filename = os.path.splitext(os.path.basename(filepath))[0]
             input_extention = os.path.splitext(os.path.basename(filepath))[1]
             savepath = os.path.join(
-                os.path.dirname(filepath), input_filename + f"_cleaned{input_extention}"
+                os.path.dirname(filepath), input_filename +
+                f"_cleaned{input_extention}"
             )
         assert os.path.isfile(filepath), "File does not exist."
         assert not os.path.isfile(savepath), "File already exists."
@@ -168,6 +182,10 @@ class FileStreamCleaner(BaseCleaner):
         self.file = open(filepath, "r", encoding=encoding)
         self.savefile = open(savepath, "w", encoding=encoding)
         super().__init__([], True)
+
+    def read_line(self):
+        for line in self.file:
+            yield line
 
     def clean(self, n_lines=10):
         """Clean the input file by applying all selected functions in sequence.
@@ -186,7 +204,7 @@ class FileStreamCleaner(BaseCleaner):
             position=0,
             leave=True,
         ) as pbar:
-            for i, line in enumerate(self.file, 1):
+            for i, line in enumerate(self.read_line(), 1):
                 pbar.update(len(line.encode(self.encoding)))
                 lines.append(line)
                 if i % n_lines == 0:
@@ -226,12 +244,13 @@ class FolderStreamCleaner:
         self.savedir = savedir
         self.include_subdir = include_subdir
         self.encoding = encoding
-        self.files = []
+        self.files = self._get_files()
 
-    def get_files(self):
+    def _get_files(self):
         if len(self.files) == 0:
             for path, _, filenames in os.walk(self.folderdir):
-                self.files += [os.path.join(path, filename) for filename in filenames]
+                self.files += [os.path.join(path, filename)
+                               for filename in filenames]
                 if not self.include_subdir:
                     break
         return self.files
