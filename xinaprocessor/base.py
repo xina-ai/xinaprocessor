@@ -274,6 +274,13 @@ class BaseCleaner:
         return self.twitter_pipeline().keep_arabic_only().replace_repeated_chars(3, 2).remove_empty_lines()
     # endregion
 
+    # region replace functions
+    def transliteration_to_arabic(self):
+        return self._map_lines(transliteration_to_arabic)
+    
+    def arabic_to_transliteration(self):
+        return self._map_lines(arabic_to_transliteration)
+    # endregion
 
 class BaseProcessor:
     pass

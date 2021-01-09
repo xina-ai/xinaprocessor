@@ -1,4 +1,4 @@
-from xinaprocessor.constants import *
+from constants import *
 import re
 import emoji
 import random
@@ -69,3 +69,13 @@ def train_test_split(x: list, test_size: float, random_seed=None):
 def export_text(file_path, data: list, sep="\n", encoding="utf-8"):
     with open(file_path, "a", encoding=encoding) as f:
         f.write(sep.join(data))
+
+def transliteration_to_arabic(text: str):
+    for ar_char, buc_symbole in BUCKWALTER_TRANSLITERATION.items():
+        text = text.replace(buc_symbole, ar_char)
+    return text
+
+def arabic_to_transliteration(text: str):
+    for ar_char, buc_symbole in BUCKWALTER_TRANSLITERATION.items():
+        text = text.replace(ar_char, buc_symbole)
+    return text
