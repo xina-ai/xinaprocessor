@@ -32,16 +32,16 @@ class BaseCleaner:
     def remove_english_numbers(self):
         return self._remove(ENGLISH_NUM)
 
-    def remove_arabic_puntuation(self):
+    def remove_arabic_punctuation(self):
         return self._remove(ARABIC_PUNCTUATION)
 
-    def remove_english_puntuation(self):
+    def remove_english_punctuation(self):
         return self._remove(ENGLISH_PUNCTUATION)
 
-    def remove_other_puntuation(self):
+    def remove_other_punctuation(self):
         return self._remove(OTHER_PUNCTUATION)
 
-    def remove_puntuation(self):
+    def remove_punctuation(self):
         return self._remove(PUNCTUATION)
 
     def remove_tashkeel_main(self):

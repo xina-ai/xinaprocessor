@@ -83,7 +83,7 @@ ENGLISH_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 ARABIC_NUM = "٠١٢٣٤٥٦٧٨٩"
 ENGLISH_NUM = "0123456789"
 FARISI_NUM = "۰۱۲۳۴۵۶۷۸۹"
-ENGLISH_PUNCTUATION = "!\"#$%&'()*+, -./:;<=>?@[\]^_`{|}~"
+ENGLISH_PUNCTUATION = "!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
 ARABIC_PUNCTUATION = ':"؟!؛،,.؍,'
 
 OTHER_PUNCTUATION = [
