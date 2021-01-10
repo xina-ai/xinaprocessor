@@ -162,17 +162,20 @@ class FileStreamCleaner(BaseCleaner):
         self.sep = sep
         self.columns = columns if columns else []
         self.header = header
-        self._set_newfile(filepath, savepath)
+        if filepath:
+            self._set_newfile(filepath, savepath)
 
         super().__init__([], True)
 
     def _set_newfile(self, filepath, savepath=None):
-        assert os.path.isfile(filepath), "File does not exist."
-        if not savepath:
-            savepath = self._get_save_path()
-        assert not os.path.isfile(savepath), "File already exists."
         self.filepath = filepath
+        assert os.path.isfile(filepath), "File does not exist."
+        self.savepath = self._get_save_path() if not savepath else savepath
+        if os.path.isfile(self.savepath):
+            warnings.warn(self.savepath + ': File already exists.')
+            return False
         self._prepare_handlers()
+        return True
 
     def _prepare_handlers(self):
         self.file = open(self.filepath, "r", encoding=self.encoding)
@@ -218,7 +221,7 @@ class FileStreamCleaner(BaseCleaner):
     def _save_lines(self, lines: List[str]):
         col_len = max(1, len(self.columns))
         for i in range(0, len(lines), col_len):
-            line = self.sep.join(lines[i:i+col_len])
+            line = self.sep.join(lines[i:i + col_len])
             self.savefile.write(line + '\n')
 
     def _apply_and_save(self, lines):
@@ -275,26 +278,36 @@ class FolderStreamCleaner:
 
         assert len(self.files) > 0, 'No files found.'
         self.filestream = FileStreamCleaner(
-            self.files[0], sep=',', columns=[0], header=True)
+            None, sep=',', columns=[0], header=True)
 
     def _get_files(self):
-        if len(self.files) == 0:
+        if not hasattr(self, 'files'):
+            self.files = []
             for path, _, filenames in os.walk(self.folderdir):
                 self.files += [os.path.join(path, filename)
-                               for filename in filenames]
+                               for filename in filenames if not filename.startswith('.')]
                 if not self.include_subdir:
                     break
         return self.files
 
     def clean_file(self, file, sample=False):
-        savefile = os.path.join(self.savedir, file.replace(
-            self.folderdir, "")) if self.savedir else None
-        self.filestream._set_newfile(file, savefile)
-        clean_fn = self.filestream.clean_sample if sample else self.filestream.clean
-        clean_fn()
+        savefile = self._get_save_dir(file)
+        if self.filestream._set_newfile(file, savefile):
+            clean_fn = self.filestream.clean_sample if sample else self.filestream.clean
+            clean_fn()
+
+    def _get_save_dir(self, file):
+        filedir = file.replace(self.folderdir, "")
+        filedir = filedir[1:] if filedir.startswith('/') else filedir
+        savefile = os.path.join(
+            self.savedir, filedir) if self.savedir else None
+        if not os.path.isdir(os.path.dirname(savefile)):
+            os.makedirs(os.path.dirname(savefile))
+        return savefile
 
     def clean_files(self, sample=False):
-        for file in self.files:
+        for i, file in enumerate(self.files, 1):
+            print(f'\nCleaning File {i}/{len(self)}: {file}')
             self.clean_file(file, sample)
 
     def __len__(self):
