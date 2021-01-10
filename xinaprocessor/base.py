@@ -167,6 +167,11 @@ class BaseCleaner:
         )
         return self._filter_lines(filter_fn)
 
+    def remove_lines_contain_single_char(self):
+        filter_fn = (
+            lambda line: not contains_single_char(line))
+        return self._filter_lines(filter_fn)
+
     def remove_lines_with_len(self, length: int, word_level=True):
         filter_fn = (
             lambda line: (len(line.split())
@@ -277,10 +282,11 @@ class BaseCleaner:
     # region replace functions
     def transliteration_to_arabic(self):
         return self._map_lines(transliteration_to_arabic)
-    
+
     def arabic_to_transliteration(self):
         return self._map_lines(arabic_to_transliteration)
     # endregion
+
 
 class BaseProcessor:
     pass
