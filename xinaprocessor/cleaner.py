@@ -100,7 +100,6 @@ class TextCleaner(BaseCleaner):
 
         Args:
             keep (str, optional): string of characters to keep. Defaults to ARABIC_CHARS.
-            sep (str, optional): separator to split text on. Defaults to \n.
         Returns:
             TextCleaner: self
         """
@@ -158,29 +157,40 @@ class FileStreamCleaner(BaseCleaner):
             columns (List[int], optional): index of the column to be processed. Defaults to None.
             header (bool, optional): true if the file contains header. Defaults to None.
         """
-        self.filepath = filepath
+
         self.encoding = encoding
         self.sep = sep
         self.columns = columns if columns else []
+        self.header = header
+        self._set_newfile(filepath, savepath)
 
-        if not savepath:
-            input_filename = os.path.splitext(os.path.basename(filepath))[0]
-            input_extention = os.path.splitext(os.path.basename(filepath))[1]
-            savepath = os.path.join(
-                os.path.dirname(filepath), input_filename +
-                f"_cleaned{input_extention}"
-            )
-        assert os.path.isfile(filepath), "File does not exist."
-        # assert not os.path.isfile(savepath), "File already exists."
-
-        self.file = open(filepath, "r", encoding=encoding)
-        self.savefile = open(savepath, "w", encoding=encoding)
-        self._handle_header(header)
         super().__init__([], True)
 
-    def _handle_header(self, header):
-        self.header = next(self._read_line()) if header else None
-        if header:
+    def _set_newfile(self, filepath, savepath=None):
+        assert os.path.isfile(filepath), "File does not exist."
+        if not savepath:
+            savepath = self._get_save_path()
+        assert not os.path.isfile(savepath), "File already exists."
+        self.filepath = filepath
+        self._prepare_handlers()
+
+    def _prepare_handlers(self):
+        self.file = open(self.filepath, "r", encoding=self.encoding)
+        self.savefile = open(self.savepath, "w", encoding=self.encoding)
+        self._handle_header()
+
+    def _get_save_path(self):
+        input_filename = os.path.splitext(os.path.basename(self.filepath))[0]
+        input_extention = os.path.splitext(os.path.basename(self.filepath))[1]
+        savepath = os.path.join(
+            os.path.dirname(self.filepath), input_filename +
+            f"_cleaned{input_extention}"
+        )
+        return savepath
+
+    def _handle_header(self):
+        self.header = next(self._read_line()) if self.header else None
+        if self.header:
             self._save_lines(self.header)
 
     def _read_line(self, pbar=None):
@@ -252,13 +262,20 @@ class FileStreamCleaner(BaseCleaner):
 
 class FolderStreamCleaner:
     def __init__(
-        self, folderdir: str, savedir: str = None, include_subdir=False, encoding="utf8"
-    ):
+            self, folderdir: str, savedir: str = None, include_subdir=False, encoding="utf8",
+            sep: str = None, columns: List[int] = None, header: bool = None) -> None:
         self.folderdir = folderdir
         self.savedir = savedir
         self.include_subdir = include_subdir
         self.encoding = encoding
+        self.sep = sep
+        self.columns = columns
+        self.header = header
         self.files = self._get_files()
+
+        assert len(self.files) > 0, 'No files found.'
+        self.filestream = FileStreamCleaner(
+            self.files[0], sep=',', columns=[0], header=True)
 
     def _get_files(self):
         if len(self.files) == 0:
@@ -268,3 +285,17 @@ class FolderStreamCleaner:
                 if not self.include_subdir:
                     break
         return self.files
+
+    def clean_file(self, file, sample=False):
+        savefile = os.path.join(self.savedir, file.replace(
+            self.folderdir, "")) if self.savedir else None
+        self.filestream._set_newfile(file, savefile)
+        clean_fn = self.filestream.clean_sample if sample else self.filestream.clean
+        clean_fn()
+
+    def clean_files(self, sample=False):
+        for file in self.files:
+            self.clean_file(file, sample)
+
+    def __len__(self):
+        return len(self.files)
