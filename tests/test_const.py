@@ -1,22 +1,59 @@
 #region example 1
 text_test_example_1 = "نص عربي english text"
 example_1_remove_english_text = "نص عربي"
+example_1_remove_arabic_text = "english text"
+example_1_remove_numbers = text_test_example_1
+example_1_remove_arabic_numbers = text_test_example_1
+example_1_remove_english_numbers = text_test_example_1
+example_1_remove_arabic_punctuation = text_test_example_1
+example_1_remove_english_punctuation = text_test_example_1
+example_1_remove_english_punctuation = text_test_example_1
+example_1_remove_punctuation = text_test_example_1
+
 #endregion 
 
 #region example 2
 text_test_example_2 = "@نص_عربي #نص_عربي نص عربي"
 example_2_remove_english_text = text_test_example_2
+example_2_remove_arabic_text = "@_ #_"
+example_2_remove_numbers = text_test_example_2
+example_2_remove_arabic_numbers = text_test_example_2
+example_2_remove_english_numbers = text_test_example_2
+example_2_remove_arabic_punctuation = text_test_example_2
+example_2_remove_english_punctuation = "نصعربي نصعربي نص عربي"
+example_2_remove_punctuation = "نصعربي نصعربي نص عربي"
+
+
+
 #endregion 
 
 #region example 3
 text_test_example_3 = "نص.عربي؟"
 example_3_remove_english_text = text_test_example_3
+example_3_remove_arabic_text = ".؟"
+example_3_remove_numbers = text_test_example_3
+example_3_remove_arabic_numbers = text_test_example_3
+example_3_remove_english_numbers = text_test_example_3
+example_3_remove_arabic_punctuation = "نصعربي"
+example_3_remove_english_punctuation = "نصعربي؟"
+example_3_remove_punctuation = "نصعربي"
+
 #endregion 
 
 #region example 4
 text_test_example_4 = "نص عربي ملتصق بـ English Text"
 example_4_remove_english_text = "نص عربي ملتصق بـ"
+example_4_remove_arabic_text = "ـ English Text"
+example_4_remove_numbers = text_test_example_4
+example_4_remove_arabic_numbers = text_test_example_4
+example_4_remove_english_numbers = text_test_example_4
+example_4_remove_arabic_punctuation = text_test_example_4
+example_4_remove_english_punctuation = text_test_example_4
+example_4_remove_punctuation = text_test_example_4
+
+
 #endregion 
+
 text_test_example_5 = "Only English Text"
 text_test_example_6 = "123!"
 text_test_example_7 = "نص عربيhttps://www.youtube.com/"

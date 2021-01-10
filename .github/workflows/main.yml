@@ -1,0 +1,15 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  TestingAction:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - name: Github Action for pytest
+        uses: cclauss/Github-Action-for-pytest@master
+        with:
+          args: python setup.py develop && pytest

@@ -69,3 +69,25 @@ def train_test_split(x: list, test_size: float, random_seed=None):
 def export_text(file_path, data: list, sep="\n", encoding="utf-8"):
     with open(file_path, "a", encoding=encoding) as f:
         f.write(sep.join(data))
+
+def transliteration_to_arabic(text: str):
+    for ar_char, buc_symbole in BUCKWALTER_TRANSLITERATION.items():
+        text = text.replace(buc_symbole, ar_char)
+    return text
+
+def arabic_to_transliteration(text: str):
+    for ar_char, buc_symbole in BUCKWALTER_TRANSLITERATION.items():
+        text = text.replace(ar_char, buc_symbole)
+    return text
+
+def str_count_words_frequency(text: str, split_by = " "):
+    unique_words = set(text.split(split_by))
+    frequency = dict(zip(unique_words, [0] * len(unique_words)))
+    for word in text.split(split_by):
+        frequency[word] += 1
+    return frequency
+
+def doc_count_words_frequency(texts: list, split_by = " "):
+    text = split_by.join(texts)
+    return str_count_words_frequency(text, split_by = split_by)
+

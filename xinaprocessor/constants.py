@@ -83,7 +83,7 @@ ENGLISH_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 ARABIC_NUM = "٠١٢٣٤٥٦٧٨٩"
 ENGLISH_NUM = "0123456789"
 FARISI_NUM = "۰۱۲۳۴۵۶۷۸۹"
-ENGLISH_PUNCTUATION = "!\"#$%&'()*+, -./:;<=>?@[\]^_`{|}~"
+ENGLISH_PUNCTUATION = "!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
 ARABIC_PUNCTUATION = ':"؟!؛،,.؍,'
 
 OTHER_PUNCTUATION = [
@@ -672,3 +672,44 @@ OTHER_PUNCTUATION = [
     "\uff65",
 ]
 PUNCTUATION = list(ENGLISH_PUNCTUATION) + list(ARABIC_PUNCTUATION) + OTHER_PUNCTUATION
+
+
+BUCKWALTER_TRANSLITERATION = {
+    'ا': 'A',
+    'ب': 'b',
+    'ة': 'p',
+    'ت': 't',
+    'ث': 'v',
+    'ج': 'j',
+    'ح': 'H',
+    'خ': 'x',
+    'د': 'd',
+    'ذ': '*',
+    'ر': 'r',
+    'ز': 'z',
+    'س': 's',
+    'ش': '$',
+    'ص': 'S',
+    'ض': 'D',
+    'ط': 'T',
+    'ظ': 'Z',
+    'ع': 'E',
+    'غ': 'g',
+    'ف': 'f',
+    'ق': 'q',
+    'ك': 'k',
+    'ل': 'l',
+    'م': 'm',
+    'ن': 'n',
+    'ه': 'h',
+    'و': 'w',
+    'ی': 'Y',
+    'ي': 'y',
+    'ً': 'F',
+    'ٌ': 'N',
+    'ٍ': 'K',
+    'َ': 'a',
+    'ُ': 'u',
+    'ِ': 'i',
+    'ّ': '~',
+}
