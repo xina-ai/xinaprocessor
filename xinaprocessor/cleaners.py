@@ -174,13 +174,14 @@ class FileStreamCleaner(BaseCleaner):
         if os.path.isfile(self.savepath):
             warnings.warn(self.savepath + ': File already exists.')
             return False
-        self._prepare_handlers()
         return True
 
     def _prepare_handlers(self):
-        self.file = open(self.filepath, "r", encoding=self.encoding)
         self.savefile = open(self.savepath, "w", encoding=self.encoding)
-        self._handle_header()
+        self._read_file()
+
+    def _read_file(self):
+        self.file = open(self.filepath, "r", encoding=self.encoding)
 
     def _get_save_path(self):
         input_filename = os.path.splitext(os.path.basename(self.filepath))[0]
@@ -191,14 +192,13 @@ class FileStreamCleaner(BaseCleaner):
         )
         return savepath
 
-    def _handle_header(self):
+    def _handle_header(self, save=True):
         self.header = next(self._read_line()) if self.header else None
-        if self.header:
+        if self.header and save:
             self._save_lines(self.header)
 
-    def _read_line(self, pbar=None):
-
-        with tqdm(
+    def _get_tqdm_file(self):
+        return tqdm(
             total=os.path.getsize(self.filepath),
             desc="Processing",
             unit="B",
@@ -206,17 +206,24 @@ class FileStreamCleaner(BaseCleaner):
             file=sys.stdout,
             position=0,
             leave=True,
-        ) as pbar:
-            if len(self.columns):
-                for line in self.file:
-                    pbar.update(len(line.encode(self.encoding)))
-                    line = line.strip().split(self.sep)
-                    line = [line[i] for i in self.columns]
-                    yield line
-            else:
-                for line in self.file:
-                    pbar.update(len(line.encode(self.encoding)))
-                    yield [line]
+        )
+
+    def _update_bar(self, pbar, line):
+        if pbar:
+            pbar.update(len(line.encode(self.encoding)))
+
+    def _read_line(self, pbar=None):
+
+        if len(self.columns):
+            for line in self.file:
+                self._update_bar(pbar, line)
+                line = line.strip().split(self.sep)
+                line = [line[i] for i in self.columns]
+                yield line
+        else:
+            for line in self.file:
+                self._update_bar(pbar, line)
+                yield [line.strip()]
 
     def _save_lines(self, lines: List[str]):
         col_len = max(1, len(self.columns))
@@ -228,6 +235,10 @@ class FileStreamCleaner(BaseCleaner):
         cleaned = self._sequential.apply(lines)
         self._save_lines(cleaned)
 
+    def _prepare_clean(self):
+        self._prepare_handlers()
+        self._handle_header()
+
     def clean(self, n_lines=10):
         """Clean the input file by applying all selected functions in sequence.
 
@@ -236,11 +247,13 @@ class FileStreamCleaner(BaseCleaner):
         """
         assert len(self._sequential) > 0, "No functions to apply"
         lines = []
-        for i, line in enumerate(self._read_line(), 1):
-            lines.extend(line)
-            if i % n_lines == 0:
-                self._apply_and_save(lines)
-                lines = []
+        self._prepare_clean()
+        with self._get_tqdm_file() as pbar:
+            for i, line in enumerate(self._read_line(pbar), 1):
+                lines.extend(line)
+                if i % n_lines == 0:
+                    self._apply_and_save(lines)
+                    lines = []
 
         if len(lines) > 0:
             self._apply_and_save(lines)
@@ -251,6 +264,7 @@ class FileStreamCleaner(BaseCleaner):
         Args:
             n_lines (int, optional): number of lines to be processed at the same time. Defaults to 1000.
         """
+        self._prepare_clean()
         lines = []
         for i, line in enumerate(self._read_line(), 1):
             lines.extend(line)
@@ -258,15 +272,26 @@ class FileStreamCleaner(BaseCleaner):
                 self._apply_and_save(lines)
                 break
 
+    def get_unique_chars(self):
+        self._read_file()
+        self._handle_header(save=False)
+        chars = set()
+        with self._get_tqdm_file() as pbar:
+            for line in self._read_line(pbar):
+                chars.update(list(''.join(line)))
+        return list(chars)
+
     def __del__(self):
         if hasattr(self, "file"):
-            del self.file, self.savefile
+            self.file.close()
+        if hasattr(self, "savefile"):
+            self.savefile.close()
 
 
 class FolderStreamCleaner:
     def __init__(
             self, folderdir: str, savedir: str = None, include_subdir=False, encoding="utf8",
-            sep: str = None, columns: List[int] = None, header: bool = None) -> None:
+            sep: str = None, columns: List[int] = None, header: bool = None, n_jobs=4) -> None:
         self.folderdir = folderdir
         self.savedir = savedir
         self.include_subdir = include_subdir
@@ -274,6 +299,7 @@ class FolderStreamCleaner:
         self.sep = sep
         self.columns = columns
         self.header = header
+        self.n_jobs = n_jobs
         self.files = self._get_files()
 
         assert len(self.files) > 0, 'No files found.'
@@ -306,9 +332,16 @@ class FolderStreamCleaner:
         return savefile
 
     def clean_files(self, sample=False):
+        # self.run(lambda file: self.clean_file(file, sample), self.files)
         for i, file in enumerate(self.files, 1):
             print(f'\nCleaning File {i}/{len(self)}: {file}')
             self.clean_file(file, sample)
+
+    def run(self, fn, my_iter):
+        with con.ThreadPoolExecutor(self.n_jobs) as executor:
+            results = list(
+                tqdm(executor.map(fn, my_iter), total=len(my_iter)))
+        return results
 
     def __len__(self):
         return len(self.files)
