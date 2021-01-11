@@ -182,6 +182,11 @@ class BaseCleaner:
     def remove_lines_contain(self, char: int):
         return self._filter_lines(lambda line: char not in line)
 
+    def remove_lines_contain_persian(self):
+        filter_fn = (
+            lambda line: not contains_persian(line))
+        return self._filter_lines(filter_fn)
+
     def keep_lines_contain(self, char: int):
         return self._filter_lines(lambda line: char in line)
 

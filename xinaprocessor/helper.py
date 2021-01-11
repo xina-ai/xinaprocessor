@@ -2,6 +2,7 @@ from xinaprocessor.constants import *
 import re
 import emoji
 import random
+from collections import Counter
 
 
 def replace_list(list_chars, text, replace_with=""):
@@ -31,6 +32,10 @@ def remove_mentions(text: str):
 
 def contains_single_char(text: str):
     return True if re.search(r"(?:^| )\w(?:$| )", text) else False
+
+
+def contains_persian(text: str):
+    return True if re.search(r"[\u0600-\u06FF]", text) else False
 
 
 def remove_single_char_space_before(text: str):
@@ -89,11 +94,8 @@ def arabic_to_transliteration(text: str):
     return text
 
 
-def str_count_words_frequency(text: str, split_by=" "):
-    unique_words = set(text.split(split_by))
-    frequency = dict(zip(unique_words, [0] * len(unique_words)))
-    for word in text.split(split_by):
-        frequency[word] += 1
+def str_count_words_frequency(text: str, sep=" "):
+    frequency = Counter(text.split(sep))
     return frequency
 
 
