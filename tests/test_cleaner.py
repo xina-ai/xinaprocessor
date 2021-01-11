@@ -1,4 +1,4 @@
-from xinaprocessor.cleaner import *
+from xinaprocessor.cleaners import *
 from test_const import *
 import pytest
 
