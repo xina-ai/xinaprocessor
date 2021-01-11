@@ -197,11 +197,15 @@ class BaseCleaner:
             lambda line: replace_repeated_chars(line, repeated, keep_char)
         )
 
+    def replace_arabic_numbers_to_english(self):
+        return self._map_lines(lambda line: multi_replace(ARABIC_NUM, ENGLISH_NUM, line))
+
     def strip(self):
         return self._map_lines(str.strip)
 
     # endregion
     # region keep functions
+
     def keep_arabic_only(self):
         return self._keep_only(ARABIC_CHARS)
 
@@ -213,6 +217,9 @@ class BaseCleaner:
 
     def keep_arabic_and_numbers_only(self):
         return self._keep_only(ARABIC_CHARS + ARABIC_NUM + ENGLISH_NUM)
+
+    def keep_arabic_and_english_numbers_only(self):
+        return self._keep_only(ARABIC_CHARS + ENGLISH_NUM)
 
     def keep_arabic_with_tashkeel_only(self):
         return self._keep_only(list(ARABIC_CHARS) + HARAKAT_MAIN, remove_tashkeel=False)

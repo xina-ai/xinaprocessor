@@ -41,6 +41,12 @@ def remove_single_char_space_after(text: str):
     return re.sub(r"(?:^| )(\w)(?:$| )", r" \1", text).strip()
 
 
+def multi_replace(keys, values, text):
+    exp = "|".join(map(re.escape, keys))
+    def func(match): return values[keys.index(match.group(0))]
+    return re.sub(exp, func, text)
+
+
 def keep_only(text: str, list_chars):
     chars = "".join(list_chars)
     spaced_text = re.sub(f"[^{chars}]", " ", text)
