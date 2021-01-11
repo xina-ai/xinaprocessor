@@ -35,7 +35,7 @@ def contains_single_char(text: str):
 
 
 def contains_persian(text: str):
-    return True if re.search(r"[\u0600-\u06FF]", text) else False
+    return True if re.search(r"[\uFB50-\uFB9F{}]".format(''.join(PERSIAN_UNIQUE_CHARS)), text) else False
 
 
 def remove_single_char_space_before(text: str):
