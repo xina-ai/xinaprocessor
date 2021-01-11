@@ -77,19 +77,6 @@ class BaseCleaner:
     def remove_mentions(self):
         return self._map_lines(remove_mentions)
 
-    def remove_single_char(self):
-        """Remove words of a single character
-
-        Returns:
-            TextCleaner: self
-
-        Examples:
-            inp = 'hello h r you?'
-            print(remove_single_char(inp))
-                'hello you?'
-        """
-        return self._map_lines(remove_single_char)
-
     # endregion
     # region internal functions
 

@@ -5,6 +5,7 @@ from tqdm import tqdm
 import os
 import sys
 from typing import List
+import concurrent.futures as con
 
 
 class TextCleaner(BaseCleaner):
@@ -162,8 +163,7 @@ class FileStreamCleaner(BaseCleaner):
         self.sep = sep
         self.columns = columns if columns else []
         self.header = header
-        if filepath:
-            self._set_newfile(filepath, savepath)
+        self._set_newfile(filepath, savepath)
 
         super().__init__([], True)
 
@@ -171,10 +171,7 @@ class FileStreamCleaner(BaseCleaner):
         self.filepath = filepath
         assert os.path.isfile(filepath), "File does not exist."
         self.savepath = self._get_save_path() if not savepath else savepath
-        if os.path.isfile(self.savepath):
-            warnings.warn(self.savepath + ': File already exists.')
-            return False
-        return True
+        warnings.warn(self.savepath + ': File already exists.')
 
     def _prepare_handlers(self):
         self.savefile = open(self.savepath, "w", encoding=self.encoding)
@@ -303,8 +300,7 @@ class FolderStreamCleaner:
         self.files = self._get_files()
 
         assert len(self.files) > 0, 'No files found.'
-        self.filestream = FileStreamCleaner(
-            None, sep=',', columns=[0], header=True)
+        self.apply = BaseCleaner([], stream=True)
 
     def _get_files(self):
         if not hasattr(self, 'files'):
@@ -318,9 +314,11 @@ class FolderStreamCleaner:
 
     def clean_file(self, file, sample=False):
         savefile = self._get_save_dir(file)
-        if self.filestream._set_newfile(file, savefile):
-            clean_fn = self.filestream.clean_sample if sample else self.filestream.clean
-            clean_fn()
+        filestream = FileStreamCleaner(
+            file, savefile, sep=self.sep, columns=self.columns, header=self.header)
+        filestream._sequential = self.apply._sequential
+        clean_fn = filestream.clean_sample if sample else filestream.clean
+        clean_fn()
 
     def _get_save_dir(self, file):
         filedir = file.replace(self.folderdir, "")
@@ -332,16 +330,18 @@ class FolderStreamCleaner:
         return savefile
 
     def clean_files(self, sample=False):
-        # self.run(lambda file: self.clean_file(file, sample), self.files)
-        for i, file in enumerate(self.files, 1):
-            print(f'\nCleaning File {i}/{len(self)}: {file}')
-            self.clean_file(file, sample)
+        self.run(lambda file: self.clean_file(file, sample), self.files)
+        # for i, file in enumerate(self.files, 1):
+        #     print(f'\nCleaning File {i}/{len(self)}: {file}')
+        #     self.clean_file(file, sample)
 
     def run(self, fn, my_iter):
-        with con.ThreadPoolExecutor(self.n_jobs) as executor:
-            results = list(
-                tqdm(executor.map(fn, my_iter), total=len(my_iter)))
-        return results
+        with con.ThreadPoolExecutor(max_workers=self.n_jobs) as executor:
+            futures = []
+            for item in my_iter:
+                futures.append(executor.submit(fn, item))
+            for i, _ in enumerate(con.as_completed(futures)):
+                print(f'\n{i}/{len(self)} has been cleaned.')
 
     def __len__(self):
         return len(self.files)
