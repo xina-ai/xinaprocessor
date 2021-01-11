@@ -167,11 +167,12 @@ class FileStreamCleaner(BaseCleaner):
 
         super().__init__([], True)
 
-    def _set_newfile(self, filepath, savepath=None):
+    def _set_newfile(self, filepath, savepath):
         self.filepath = filepath
         assert os.path.isfile(filepath), "File does not exist."
         self.savepath = self._get_save_path() if not savepath else savepath
-        warnings.warn(self.savepath + ': File already exists.')
+        if os.path.isfile(self.savepath):
+            warnings.warn(self.savepath + ': File already exists.')
 
     def _prepare_handlers(self):
         self.savefile = open(self.savepath, "w", encoding=self.encoding)
@@ -201,7 +202,7 @@ class FileStreamCleaner(BaseCleaner):
             unit="B",
             unit_scale=True,
             file=sys.stdout,
-            position=0,
+            # position=0,
             leave=True,
         )
 
