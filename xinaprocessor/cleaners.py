@@ -18,10 +18,13 @@ class TextCleaner(BaseCleaner):
 
     @property
     def text(self):
-        return self.sep.join(self.lines)
+        return self._join_text(self.lines)
 
     def get_text(self):
         return self.text
+
+    def _join_text(self, lines):
+        return self.sep.join(lines) if self.sep else lines[0]
 
     def get_arabic_text(self):
         """Extract the Arabic text only.
@@ -29,7 +32,7 @@ class TextCleaner(BaseCleaner):
         Returns:
             str: Arabic text
         """
-        return self.sep.join(self._get(ARABIC_CHARS))
+        return self._join_text(self._get(ARABIC_CHARS))
 
     def get_english_text(self):
         """Extract the English text only.
@@ -37,7 +40,7 @@ class TextCleaner(BaseCleaner):
         Returns:
             str: English text
         """
-        return self.sep.join(self._get(ENGLISH_CHARS))
+        return self._join_text(self._get(ENGLISH_CHARS))
 
     def get_arabic_with_numbers(self):
         """Extract Arabic text and numbers only.
@@ -45,7 +48,7 @@ class TextCleaner(BaseCleaner):
         Returns:
             str: Arabic text with numbers
         """
-        return self.sep.join(self._get(ARABIC_CHARS + ARABIC_NUM + ENGLISH_NUM))
+        return self._join_text(self._get(ARABIC_CHARS + ARABIC_NUM + ENGLISH_NUM))
 
     def get_arabic_with_harakat(self):
         """Extract Arabic text and harakat only.
@@ -53,7 +56,7 @@ class TextCleaner(BaseCleaner):
         Returns:
             str: Arabic text with harakat
         """
-        return self.sep.join(self._get(ARABIC_CHARS, remove_tashkeel=False))
+        return self._join_text(self._get(ARABIC_CHARS, remove_tashkeel=False))
 
     def get_unique_chars(self):
         return list(set("".join(self.lines)))
@@ -227,7 +230,7 @@ class FileStreamCleaner(BaseCleaner):
     def _save_lines(self, lines: List[str]):
         col_len = max(1, len(self.columns))
         for i in range(0, len(lines), col_len):
-            line = self.sep.join(lines[i:i + col_len])
+            line = self._join_text(lines[i:i + col_len])
             self.savefile.write(line + '\n')
 
     def _apply_and_save(self, lines):
