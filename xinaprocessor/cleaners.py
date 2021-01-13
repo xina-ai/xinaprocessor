@@ -91,7 +91,8 @@ class TextCleaner(BaseCleaner):
         return self
 
     def _split_text(self, sep):
-        self.lines = self.raw_text.strip().split(sep)
+        self.lines = self.raw_text.strip().split(
+            sep) if sep else [self.raw_text]
         self.strip()
         return self.lines
 
@@ -332,9 +333,6 @@ class FolderStreamCleaner:
 
     def clean_files(self, sample=False):
         self.run(lambda file: self.clean_file(file, sample), self.files)
-        # for i, file in enumerate(self.files, 1):
-        #     print(f'\nCleaning File {i}/{len(self)}: {file}')
-        #     self.clean_file(file, sample)
 
     def run(self, fn, my_iter):
         with con.ThreadPoolExecutor(max_workers=self.n_jobs) as executor:
