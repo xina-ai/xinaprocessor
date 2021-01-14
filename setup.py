@@ -6,7 +6,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='xinaprocessor',
-    version='0.1.1',
+    version='0.1.2',
     install_requires=required,
     tests_require=['pytest'],
     author="Xina AI",
