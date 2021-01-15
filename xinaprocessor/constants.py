@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 ARABIC_CHARS = "عيئیتطهءنقفإظىرحكةوآؤضسخألذدصثجمزشغبا"
 HARAKAT_MAIN = [
     "\u064b",  # Fathatan

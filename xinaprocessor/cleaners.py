@@ -9,22 +9,21 @@ import concurrent.futures as con
 
 
 class TextCleaner(BaseCleaner):
-    def __init__(self, text: str, sep="\n") -> None:
+    def __init__(self, text: str, sep="\n"):
+        super().__init__()
 
-        super().__init__([])
-        self.raw_text = text
         self.sep = sep
-        self.raw_lines = self._split_text(sep)
+        self.set_text(text, sep)
 
-    @property
-    def text(self):
-        return self._join_text(self.lines)
+    @staticmethod
+    def create_cleaner(text: str, sep="\n"):
+        return TextCleaner(text, sep)
 
-    def get_text(self):
-        return self.text
-
-    def _join_text(self, lines):
-        return self.sep.join(lines) if self.sep else lines[0]
+    @staticmethod
+    def create_cleaner_from_list(lst, sep="\n"):
+        cleaner = TextCleaner.create_cleaner('', sep)
+        cleaner.lines = lst
+        return cleaner
 
     def get_arabic_text(self):
         """Extract the Arabic text only.
@@ -70,34 +69,9 @@ class TextCleaner(BaseCleaner):
     def get_lines_with_len(self, length: int):
         return list(filter(self.lines, lambda line: len(line) == length))
 
-    def head(self, num_samples=1):
-        assert num_samples > -1 and num_samples < len(self)
-        return self.lines[:num_samples]
-
-    def tail(self, num_samples=1):
-        assert num_samples > -1 and num_samples < len(self)
-        return self.lines[-num_samples:]
-
-    def sample(self, num_samples=1, seed=0):
-        assert num_samples > 0 and num_samples < len(self)
-        random.seed(seed)
-        return random.sample(self.lines, num_samples)
-
-    def split_on(self, symbol):
-        """ Further split each line by the input "symbol"
-        """
-        lines = self._map_lines(lambda x: x.split(symbol))
-        self.lines = [item for line in lines for item in line]
-
     def remove_duplicates(self):
         self.lines = list(dict.fromkeys(self.lines))
         return self
-
-    def _split_text(self, sep):
-        self.lines = self.raw_text.strip().split(
-            sep) if sep else [self.raw_text]
-        self.strip()
-        return self.lines
 
     def _clean(self, keep):
         """Clean the text by keeping only "keep" string.
@@ -120,22 +94,17 @@ class TextCleaner(BaseCleaner):
             warnings.warn(
                 f"Unequal separators detected, using {self.sep} as a new separator."
             )
-        new_object = TextCleaner("", self.sep)
-        new_object.lines = [line for line in self.lines if line not in other.lines] + [
+        lines = [line for line in self.lines if line not in other.lines] + [
             line for line in other.lines if line not in self.lines
         ]
-        new_object.raw_lines = self.raw_lines + other.raw_lines
-        new_object.raw_text = self.raw_text + other.raw_text
+        return TextCleaner.create_cleaner_from_list(lines, self.sep)
 
     def __add__(self, other):
         if self.sep != other.sep:
             warnings.warn(
                 f"Unequal separators detected, using {self.sep} as a new separator."
             )
-        new_object = TextCleaner("", self.sep)
-        new_object.lines = self.lines + other.lines
-        new_object.raw_lines = self.raw_lines + other.raw_lines
-        new_object.raw_text = self.raw_text + other.raw_text
+        return TextCleaner.create_cleaner_from_list(self.lines + other.lines, self.sep)
 
 
 class FileCleaner(TextCleaner):
@@ -160,16 +129,21 @@ class FileStreamCleaner(BaseCleaner):
             encoding (str, optional): encoding of the input file. Defaults to "utf8".
             sep (str, optional): to split coulmns when needed. Defaults to None.
             columns (List[int], optional): index of the column to be processed. Defaults to None.
+                                            if None, all columns are processed
             header (bool, optional): true if the file contains header. Defaults to None.
         """
 
+        super().__init__(stream=True)
         self.encoding = encoding
         self.sep = sep
         self.columns = columns if columns else []
         self.header = header
         self._set_newfile(filepath, savepath)
 
-        super().__init__([], True)
+    def _add_split(self):
+        if self.sep:
+            self.split_on(self.sep) if not self.columns else self.split_and_remove_on(
+                self.sep, self.columns)
 
     def _set_newfile(self, filepath, savepath):
         self.filepath = filepath
@@ -177,13 +151,7 @@ class FileStreamCleaner(BaseCleaner):
         self.savepath = self._get_save_path() if not savepath else savepath
         if os.path.isfile(self.savepath):
             warnings.warn(self.savepath + ': File already exists.')
-
-    def _prepare_handlers(self):
-        self.savefile = open(self.savepath, "w", encoding=self.encoding)
-        self._read_file()
-
-    def _read_file(self):
-        self.file = open(self.filepath, "r", encoding=self.encoding)
+        self._add_split()
 
     def _get_save_path(self):
         input_filename = os.path.splitext(os.path.basename(self.filepath))[0]
@@ -195,9 +163,17 @@ class FileStreamCleaner(BaseCleaner):
         return savepath
 
     def _handle_header(self, save=True):
-        self.header = next(self._read_line()) if self.header else None
+        self.header = next(self.file) if self.header else None
         if self.header and save:
-            self._save_lines(self.header)
+            self.savefile.write(self.header)
+
+    def _prepare_handlers(self):
+        self.savefile = open(self.savepath, "w", encoding=self.encoding)
+        self.file = open(self.filepath, "r", encoding=self.encoding)
+
+    def _prepare_clean(self):
+        self._prepare_handlers()
+        self._handle_header()
 
     def _get_tqdm_file(self):
         return tqdm(
@@ -210,22 +186,8 @@ class FileStreamCleaner(BaseCleaner):
             leave=True,
         )
 
-    def _update_bar(self, pbar, line):
-        if pbar:
-            pbar.update(len(line.encode(self.encoding)))
-
-    def _read_line(self, pbar=None):
-
-        if len(self.columns):
-            for line in self.file:
-                self._update_bar(pbar, line)
-                line = line.strip().split(self.sep)
-                line = [line[i] for i in self.columns]
-                yield line
-        else:
-            for line in self.file:
-                self._update_bar(pbar, line)
-                yield [line.strip()]
+    def _join_text(self, lines):
+        return self.sep.join(lines) if self.sep else self.lines[0]
 
     def _save_lines(self, lines: List[str]):
         col_len = max(1, len(self.columns))
@@ -233,13 +195,9 @@ class FileStreamCleaner(BaseCleaner):
             line = self._join_text(lines[i:i + col_len])
             self.savefile.write(line + '\n')
 
-    def _apply_and_save(self, lines):
-        cleaned = self._sequential.apply(lines)
+    def _apply_and_save(self):
+        cleaned = self._sequential.apply(self.lines)
         self._save_lines(cleaned)
-
-    def _prepare_clean(self):
-        self._prepare_handlers()
-        self._handle_header()
 
     def clean(self, n_lines=10):
         """Clean the input file by applying all selected functions in sequence.
@@ -248,17 +206,21 @@ class FileStreamCleaner(BaseCleaner):
             n_lines (int, optional): number of lines to be processed at the same time. Defaults to 10.
         """
         assert len(self._sequential) > 0, "No functions to apply"
-        lines = []
         self._prepare_clean()
-        with self._get_tqdm_file() as pbar:
-            for i, line in enumerate(self._read_line(pbar), 1):
-                lines.extend(line)
-                if i % n_lines == 0:
-                    self._apply_and_save(lines)
-                    lines = []
 
-        if len(lines) > 0:
-            self._apply_and_save(lines)
+        self.clear_text()
+        with self._get_tqdm_file() as pbar:
+            if self.header:
+                pbar.update(len(self.header.encode(self.encoding)))
+            for i, line in enumerate(self.file, 1):
+                pbar.update(len(line.encode(self.encoding)))
+                self.add_text(line)
+                if i % n_lines == 0:
+                    self._apply_and_save()
+                    self.clear_text()
+
+        if len(self.lines) > 0:
+            self._apply_and_save()
 
     def clean_sample(self, n_lines=1000):
         """Clean a sample of the input file by applying all selected functions in sequence.
@@ -267,19 +229,19 @@ class FileStreamCleaner(BaseCleaner):
             n_lines (int, optional): number of lines to be processed at the same time. Defaults to 1000.
         """
         self._prepare_clean()
-        lines = []
-        for i, line in enumerate(self._read_line(), 1):
-            lines.extend(line)
+        self.clear_text()
+        for i, line in enumerate(self.file, 1):
+            self.add_text(line)
             if i % n_lines == 0:
-                self._apply_and_save(lines)
+                self._apply_and_save()
                 break
 
     def get_unique_chars(self):
-        self._read_file()
-        self._handle_header(save=False)
+        self.file.seek(0)
         chars = set()
         with self._get_tqdm_file() as pbar:
-            for line in self._read_line(pbar):
+            for line in self.file:
+                pbar.update(len(line.encode(self.encoding)))
                 chars.update(list(''.join(line)))
         return list(chars)
 

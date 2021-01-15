@@ -2,8 +2,7 @@ from typing import Callable, Iterable, Any, NamedTuple
 
 
 class Operation(NamedTuple):
-    apply_fn: Callable[[Any], Any]
-    map_fn: Callable[[Any], Any]
+    fnc: Callable[[Any], Any]
 
 
 class Sequential:
@@ -11,15 +10,18 @@ class Sequential:
         super().__init__()
         self.operations = []
 
-    def add(self, apply_fn: Callable[[Any], Any], map_fn: Callable[[Any], Any]):
-        operation = Operation(apply_fn=apply_fn, map_fn=map_fn)
+    def add(self, fnc: Callable[[Any], Any]):
+        operation = Operation(fnc)
         self.operations.append(operation)
 
-    def apply(self, map_list: Iterable[str]):
-        output = map_list
+    def apply(self, lst: Iterable[str]):
+        output = lst
         for op in self.operations:
-            output = list(op.map_fn(op.apply_fn, output))
+            output = list(op.fnc(output))
         return output
+
+    def clear(self):
+        self.operations = []
 
     def __len__(self):
         return len(self.operations)

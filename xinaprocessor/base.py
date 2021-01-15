@@ -2,21 +2,25 @@ from xinaprocessor.constants import *
 from xinaprocessor.helper import *
 from typing import List
 from xinaprocessor.classes import Sequential
+from functools import partial, reduce
+import operator
 
 
 class BaseCleaner:
-    def __init__(self, lines: List[str], stream=False) -> None:
+    def __init__(self, lines: List[str] = [], stream=False) -> None:
         """Base class for all cleaners, it contains all basic functionality of the cleaner
 
         Args:
-            lines (List[str]): list of strings
+            lines (List[str]): list of strings, text to be processed
             stream (bool): whether to use streaming or not
         """
-        self.lines = lines  # text to be processed
+        self.lines = lines
         self.stream = stream
-        self._sequential = Sequential()  # used for streaming
+        # used for streaming
+        self._sequential = Sequential()
 
     # region remove functions
+
     def remove_english_text(self):
         return self._remove(ENGLISH_CHARS)
 
@@ -85,11 +89,14 @@ class BaseCleaner:
 
     def _filter_map(self, inp_list, fn):
         assert type(inp_list) == list
+        fnc = partial(filter, fn)
+        return self._apply(inp_list, fnc)
+
+    def _apply_on_list(self, fnc):
         if self.stream:
-            self._sequential.add(fn, filter)
-            return self
+            self._sequential.add(fnc)
         else:
-            self.lines = list(filter(fn, inp_list))
+            self.lines = list(fnc(self.lines))
         return self
 
     def _keep_only(self, to_keep, remove_tashkeel=True, remove_tatweel=True):
@@ -116,12 +123,12 @@ class BaseCleaner:
 
     def _mapper(self, list_map, fn):
         assert type(list_map) == list
-
+        fnc = partial(map, fn)
         if self.stream:
-            self._sequential.add(fn, map)
+            self._sequential.add(fnc)
             return self.lines
         else:
-            return list(map(fn, list_map))
+            return list(fnc(list_map))
 
     def _remove(self, remove):
         assert remove is not None
@@ -135,8 +142,23 @@ class BaseCleaner:
             replace = list(replace)
         return self._map_lines(lambda line: replace_list(replace, line, rep_with))
 
+    def _join_text(self, sep=None):
+        return sep.join(self.lines) if sep else self.lines[0]
+
+    def _flatten_list(self, indices=None):
+        """Flatten a list of lists and keeps only the provided indices.
+        if indices is None, all indices are kept and flattened
+
+        Args:
+            indices (List[int], optional): indices to keep from the inner. Defaults to None.
+        """
+        fnc = partial(map, lambda line: [item for i, item in enumerate(line)
+                                         if indices is None or i in indices])
+        fnc2 = partial(reduce, operator.iconcat)
+        return self._apply_on_list(fnc)._apply_on_list(fnc2)
     # endregion
     # region filter functions
+
     def remove_empty_lines(self):
         return self.remove_lines_below_len(1)
 
@@ -180,6 +202,48 @@ class BaseCleaner:
     # endregion
     # region additional functions
 
+    def head(self, num_samples=1):
+        assert num_samples > -1 and num_samples < len(self)
+        return self.lines[:num_samples]
+
+    def tail(self, num_samples=1):
+        assert num_samples > -1 and num_samples < len(self)
+        return self.lines[-num_samples:]
+
+    def sample(self, num_samples=1, seed=0):
+        assert num_samples > 0 and num_samples < len(self)
+        random.seed(seed)
+        return random.sample(self.lines, num_samples)
+
+    def clear_text(self):
+        self.lines = []
+        return self
+
+    def clear_sequential(self):
+        if self.stream:
+            self._sequential.clear()
+
+    def split_on(self, symbol: str):
+        """Further split each line by the input "symbol"
+
+        Args:
+            symbol (str): A symbol to split on
+        """
+        return self._map_lines(lambda line: line.split(symbol))._flatten_list()
+
+    def split_and_remove_on(self, symbol: str, columns=List[int]):
+        return self._map_lines(lambda line: line.split(symbol))._flatten_list(columns)
+
+    def add_text(self, text: str, sep=None):
+        new_lines = [text] if not sep else text.split(sep)
+        self.lines.extend(new_lines)
+        return self
+
+    def set_text(self, text: str, sep=None):
+        text = text.strip()
+        self.lines = [text] if not sep else text.split(sep)
+        return self.strip()
+
     def connect_single_char(self, with_prev=False):
         return self._map_lines(remove_single_char_space_before
                                if with_prev else remove_single_char_space_after)
@@ -195,6 +259,12 @@ class BaseCleaner:
     def strip(self):
         return self._map_lines(str.strip)
 
+    # endregion
+    # region properties
+
+    @ property
+    def text(self):
+        return self._join_text('\n')
     # endregion
     # region keep functions
 
