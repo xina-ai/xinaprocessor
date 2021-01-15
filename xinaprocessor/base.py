@@ -223,7 +223,7 @@ class BaseCleaner:
         if self.stream:
             self._sequential.clear()
 
-    def split_on(self, symbol: str):
+    def split_lines_on(self, symbol: str):
         """Further split each line by the input "symbol"
 
         Args:
@@ -231,7 +231,7 @@ class BaseCleaner:
         """
         return self._map_lines(lambda line: line.split(symbol))._flatten_list()
 
-    def split_and_remove_on(self, symbol: str, columns=List[int]):
+    def split_and_remove_lines_on(self, symbol: str, columns=List[int]):
         return self._map_lines(lambda line: line.split(symbol))._flatten_list(columns)
 
     def add_text(self, text: str, sep=None):

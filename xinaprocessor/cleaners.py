@@ -142,7 +142,7 @@ class FileStreamCleaner(BaseCleaner):
 
     def _add_split(self):
         if self.sep:
-            self.split_on(self.sep) if not self.columns else self.split_and_remove_on(
+            self.split_lines_on(self.sep) if not self.columns else self.split_and_remove_lines_on(
                 self.sep, self.columns)
 
     def _set_newfile(self, filepath, savepath):
