@@ -240,6 +240,8 @@ class BaseCleaner:
         return self
 
     def set_text(self, text: str, sep=None):
+        if not text:
+            return self
         text = text.strip()
         self.lines = [text] if not sep else text.split(sep)
         return self.strip()
