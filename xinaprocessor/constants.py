@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-ARABIC_CHARS = "عيئتطهءنقفإظىرحكةوآؤضسخألذدصثجمزشغبا"
+ARABIC_CHARS = "دجحإﻹﻷأآﻵخهعغفقثصضذطكمنتالبيسشظزوةىﻻرؤءئ"
 HARAKAT_MAIN = [
     "\u064b",  # Fathatan
     "\u064c",  # Dammatan
