@@ -203,15 +203,21 @@ class BaseCleaner:
     # region additional functions
 
     def head(self, num_samples=1):
-        assert num_samples > -1 and num_samples < len(self)
+        if num_samples < 0 or num_samples >= len(self):
+            raise IndexError(
+                f"Number of samples must be in range [0, f{len(self)}]. Your input {num_samples}")
         return self.lines[:num_samples]
 
     def tail(self, num_samples=1):
-        assert num_samples > -1 and num_samples < len(self)
+        if num_samples < 0 or num_samples >= len(self):
+            raise IndexError(
+                f"Number of samples must be in range [0, f{len(self)}]. Your input {num_samples}")
         return self.lines[-num_samples:]
 
     def sample(self, num_samples=1, seed=0):
-        assert num_samples > 0 and num_samples < len(self)
+        if num_samples < 0 or num_samples >= len(self):
+            raise IndexError(
+                f"Number of samples must be in range [0, f{len(self)}]. Your input {num_samples}")
         random.seed(seed)
         return random.sample(self.lines, num_samples)
 
@@ -303,7 +309,8 @@ class BaseCleaner:
     # endregion
     # region object operations
     def __getitem__(self, item):
-        assert item > -1 and item < len(self), "Index must be in range."
+        if item < 0 or item >= len(self):
+            raise IndexError
         return self.lines[item]
 
     def __len__(self):

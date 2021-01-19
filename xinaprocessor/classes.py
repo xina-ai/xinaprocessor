@@ -27,5 +27,7 @@ class Sequential:
         return len(self.operations)
 
     def __getitem__(self, item):
-        assert item > -1 and item < len(self)
+        if item < 0 or item >= len(self):
+            raise IndexError(
+                f"Index must be in range [0,{len(self)}]. Your input: f{item}")
         return self.operations[item]

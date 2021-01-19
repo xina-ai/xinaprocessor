@@ -147,7 +147,8 @@ class FileStreamCleaner(BaseCleaner):
 
     def _set_newfile(self, filepath, savepath):
         self.filepath = filepath
-        assert os.path.isfile(filepath), "File does not exist."
+        if not os.path.isfile(filepath):
+            raise FileNotFoundError(f"File {filepath} does not exist.")
         self.savepath = self._get_save_path() if not savepath else savepath
         if os.path.isfile(self.savepath):
             warnings.warn(self.savepath + ': File already exists.')
@@ -205,7 +206,9 @@ class FileStreamCleaner(BaseCleaner):
         Args:
             n_lines (int, optional): number of lines to be processed at the same time. Defaults to 10.
         """
-        assert len(self._sequential) > 0, "No functions to apply"
+        if len(self._sequential) == 0:
+            raise ValueError(
+                "Make sure to call the functions you want before start cleaning.")
         self._prepare_clean()
 
         self.clear_text()
@@ -266,7 +269,9 @@ class FolderStreamCleaner:
         self.n_jobs = n_jobs
         self.files = self._get_files()
 
-        assert len(self.files) > 0, 'No files found.'
+        if len(self.files) == 0:
+            raise ValueError(
+                f"No files were found in {folderdir}. You can use 'include_subdir' to look in sub directories.")
         self.apply = BaseCleaner([], stream=True)
 
     def _get_files(self):
