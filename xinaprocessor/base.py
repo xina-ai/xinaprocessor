@@ -159,39 +159,39 @@ class BaseCleaner:
     # endregion
     # region filter functions
 
-    def remove_empty_lines(self):
-        return self.remove_lines_below_len(1)
+    def drop_empty_lines(self):
+        return self.drop_lines_below_len(1)
 
-    def remove_lines_below_len(self, length: int, word_level=True):
+    def drop_lines_below_len(self, length: int, word_level=True):
         filter_fn = (
             lambda line: (len(line.split())
                           if word_level else len(line)) >= length
         )
         return self._filter_lines(filter_fn)
 
-    def remove_lines_above_len(self, length: int, word_level=True):
+    def drop_lines_above_len(self, length: int, word_level=True):
         filter_fn = (
             lambda line: (len(line.split())
                           if word_level else len(line)) <= length
         )
         return self._filter_lines(filter_fn)
 
-    def remove_lines_contain_single_char(self):
+    def drop_lines_contain_single_char(self):
         filter_fn = (
             lambda line: not contains_single_char(line))
         return self._filter_lines(filter_fn)
 
-    def remove_lines_with_len(self, length: int, word_level=True):
+    def drop_lines_with_len(self, length: int, word_level=True):
         filter_fn = (
             lambda line: (len(line.split())
                           if word_level else len(line)) != length
         )
         return self._filter_lines(filter_fn)
 
-    def remove_lines_contain(self, char: int):
+    def drop_lines_contain(self, char: int):
         return self._filter_lines(lambda line: char not in line)
 
-    def remove_lines_contain_persian(self):
+    def drop_lines_contain_persian(self):
         filter_fn = (
             lambda line: not contains_persian(line))
         return self._filter_lines(filter_fn)
@@ -233,11 +233,17 @@ class BaseCleaner:
         """Further split each line by the input "symbol"
 
         Args:
-            symbol (str): A symbol to split on
+            symbol (str): Symbol to split on
         """
         return self._map_lines(lambda line: line.split(symbol))._flatten_list()
 
-    def split_and_remove_lines_on(self, symbol: str, columns=List[int]):
+    def split_and_remove_lines_on(self, symbol: str, columns: List[int]):
+        """Further split each line by the input "symbol" and keeps only (columns) indices
+
+        Args:
+            symbol (str): Symbol to split on
+            columns (List[int]): columns to keep after splitting.
+        """
         return self._map_lines(lambda line: line.split(symbol))._flatten_list(columns)
 
     def add_text(self, text: str, sep=None):
@@ -354,7 +360,7 @@ class BaseCleaner:
         return self.strip().remove_hashtags().remove_mentions().remove_links()
 
     def twitter_arabic_pipeline(self):
-        return self.twitter_pipeline().keep_arabic_only().replace_repeated_chars(3, 2).remove_empty_lines()
+        return self.twitter_pipeline().keep_arabic_only().replace_repeated_chars(3, 2).drop_empty_lines()
     # endregion
 
     # region replace functions
