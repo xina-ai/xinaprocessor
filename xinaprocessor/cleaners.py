@@ -69,6 +69,9 @@ class TextCleaner(BaseCleaner):
     def get_lines_with_len(self, length: int):
         return list(filter(self.lines, lambda line: len(line) == length))
 
+    def count_lines_with_contain(self, text: str):
+        return list(filter(self.lines, lambda line: text in line))
+
     def remove_duplicates(self):
         self.lines = list(dict.fromkeys(self.lines))
         return self
