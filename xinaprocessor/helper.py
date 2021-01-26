@@ -1,3 +1,4 @@
+from typing import List
 from xinaprocessor.constants import *
 import re
 import emoji
@@ -46,7 +47,17 @@ def remove_single_char_space_after(text: str):
     return re.sub(r"(?:^| )(\w)(?:$| )", r" \1", text).strip()
 
 
-def multi_replace(keys, values, text):
+def multi_replace(keys: List[str], values: List[str], text: str):
+    """Replace each item in keys with the corresponding item in values in the input text
+
+    Args:
+        keys (List[str]): a list of strings to be replaces
+        values (List[str]): list of strings with same length of keys to with values to be replaced with
+        text (str): input text to apply replacements on
+
+    Returns:
+        str: text with strings in keys replaced with corresponding strings in values
+    """
     exp = "|".join(map(re.escape, keys))
     def func(match): return values[keys.index(match.group(0))]
     return re.sub(exp, func, text)
