@@ -267,7 +267,7 @@ class BaseCleaner:
             lambda line: replace_repeated_chars(line, repeated, keep_char)
         )
 
-    def replace_arabic_numbers_to_english(self):
+    def convert_arabic_numbers_to_english(self):
         return self._map_lines(lambda line: multi_replace(ARABIC_NUM, ENGLISH_NUM, line))
 
     def strip(self):
