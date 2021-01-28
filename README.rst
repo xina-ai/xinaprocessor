@@ -1,4 +1,5 @@
-# Xina Processor
+Xina Processor
+----------------
 .. image:: ./imgs/logo.png
    :width: 400
    :alt: Xina AI
