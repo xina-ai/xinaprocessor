@@ -149,7 +149,6 @@ class TextCleaner(BaseCleaner):
 
     def _clean(self, keep):
         """Clean the text by keeping only "keep" string.
-        If sep is not None, text will be splitted into a list.
 
         Args:
             keep (str, optional): string of characters to keep. Defaults to ARABIC_CHARS.
@@ -163,21 +162,21 @@ class TextCleaner(BaseCleaner):
 
         return self
 
-    def __sub__(self, other):
+    def _check_sep(self, other):
         if self.sep != other.sep:
             warnings.warn(
                 f"Unequal separators detected, using {self.sep} as a new separator."
             )
+
+    def __sub__(self, other):
+        self._check_sep()
         lines = [line for line in self.lines if line not in other.lines] + [
             line for line in other.lines if line not in self.lines
         ]
         return TextCleaner.create_cleaner_from_list(lines, self.sep)
 
     def __add__(self, other):
-        if self.sep != other.sep:
-            warnings.warn(
-                f"Unequal separators detected, using {self.sep} as a new separator."
-            )
+        self._check_sep()
         return TextCleaner.create_cleaner_from_list(self.lines + other.lines, self.sep)
 
 
@@ -233,7 +232,7 @@ class FileStreamCleaner(BaseCleaner):
         super().__init__(stream=True)
         self.encoding = encoding
         self.sep = sep
-        self.columns = columns if columns else []
+        self.columns = columns or []
         self.header = header
         self._set_newfile(filepath, savepath)
 
@@ -273,7 +272,7 @@ class FileStreamCleaner(BaseCleaner):
         self._prepare_handlers()
         self._handle_header()
 
-    def _get_tqdm_file(self):
+    def _get_tqdm(self):
         return tqdm(
             total=os.path.getsize(self.filepath),
             desc="Processing",
@@ -309,7 +308,7 @@ class FileStreamCleaner(BaseCleaner):
         self._prepare_clean()
 
         self.clear_text()
-        with self._get_tqdm_file() as pbar:
+        with self._get_tqdm() as pbar:
             if self.header:
                 pbar.update(len(self.header.encode(self.encoding)))
             for i, line in enumerate(self.file, 1):
@@ -344,7 +343,7 @@ class FileStreamCleaner(BaseCleaner):
         """
         self.file.seek(0)
         chars = set()
-        with self._get_tqdm_file() as pbar:
+        with self._get_tqdm() as pbar:
             for line in self.file:
                 pbar.update(len(line.encode(self.encoding)))
                 chars.update(list(''.join(line)))
