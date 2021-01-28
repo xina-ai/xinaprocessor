@@ -97,6 +97,6 @@ def test_remove_english_punctuations(inp_text, target_text):
     (text_test_example_3, example_3_remove_punctuation),
     (text_test_example_4, example_4_remove_punctuation)
 ])
-def test_remove_punctuation(inp_text, target_text):
+def test_remove_punctuations(inp_text, target_text):
     cleaner = TextCleaner(inp_text)
-    assert cleaner.remove_punctuation().text.strip() == target_text.strip()
+    assert cleaner.remove_punctuations().text.strip() == target_text.strip()
