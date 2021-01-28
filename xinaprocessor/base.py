@@ -134,11 +134,14 @@ class BaseCleaner:
         fnc = partial(filter, fn)
         return self._apply(inp_list, fnc)
 
-    def _apply_on_list(self, fnc):
+    def _apply_on_lines(self, fnc):
+        return self._apply(self.lines, fnc)
+
+    def _apply(self, inp_list, fnc):
         if self.stream:
             self._sequential.add(fnc)
         else:
-            self.lines = list(fnc(self.lines))
+            self.lines = list(fnc(inp_list))
         return self
 
     def _keep_only(self, to_keep, remove_tashkeel=True, remove_tatweel=True):
@@ -197,7 +200,7 @@ class BaseCleaner:
         fnc = partial(map, lambda line: [item for i, item in enumerate(line)
                                          if indices is None or i in indices])
         fnc2 = partial(reduce, operator.iconcat)
-        return self._apply_on_list(fnc)._apply_on_list(fnc2)
+        return self._apply_on_lines(fnc)._apply_on_lines(fnc2)
     # endregion
     # region filter functions
 
