@@ -76,6 +76,13 @@ class TextCleaner(BaseCleaner):
         self.lines = list(dict.fromkeys(self.lines))
         return self
 
+    def save2file(self, path, encoding):
+        if os.path.isfile(path):
+            raise FileExistsError('File already exists.')
+        with open(path, 'w', encoding=encoding) as f:
+            f.write('\n'.join(self.lines))
+        print(f'File is saved to {path}.')
+
     def _clean(self, keep):
         """Clean the text by keeping only "keep" string.
         If sep is not None, text will be splitted into a list.
@@ -111,14 +118,36 @@ class TextCleaner(BaseCleaner):
 
 
 class FileCleaner(TextCleaner):
-    def __init__(self, filepath: str, encoding="utf8", sep="\n") -> None:
+    def __init__(self, filepath: str, savepath: str = None, encoding="utf8",
+                 header: bool = None, large: bool = False) -> None:
+        """Process and clean file
+
+        Args:
+            filepath (str): path of the file to be processed
+            savepath (str, optional): path to save the processed text. Defaults to None
+            encoding (str, optional): encoding of the input file. Defaults to "utf8".
+            header (bool, optional): true if the file contains header. Defaults to None.
+
+        Raises:
+            FileNotFoundError: [description]
+            OSError: [description]
+        """
+        if not os.path.isfile(filepath):
+            raise FileNotFoundError("File does not exist.")
+        # raise error if the file size is larger than one GB
+        if not large and os.path.getsize(filepath) / 2 ** 30 > 1:
+            raise OSError("File too large. It is prefable to use FileStreamCleaner instead.\n"
+                          "Use large=True to disable this error.")
 
         self.file = open(filepath, "r", encoding=encoding)
-        super().__init__(self.file.read(), '\n')
+        self.savepath = savepath
+        self.encoding = encoding
 
+        super().create_cleaner_from_list(self.file.readlines()[1:] if header
+                                         else self.file.readlines())
 
-class FolderCleaner(BaseCleaner):
-    pass
+    def save(self):
+        self.save2file(self.savepath, self.encoding)
 
 
 class FileStreamCleaner(BaseCleaner):
@@ -128,14 +157,15 @@ class FileStreamCleaner(BaseCleaner):
 
         Args:
             filepath (str): path of the file to be processed
-            savepath (str, optional): path to save processed text. Defaults to None (saved in the same directory of filepath).
+            savepath (str, optional): path to save the processed text. Defaults to None
+                If None, the file will be saved in the same directory with a suffix '_cleaned'.
             encoding (str, optional): encoding of the input file. Defaults to "utf8".
-            sep (str, optional): to split coulmns when needed. Defaults to None.
+            sep (str, optional): separator to split columns if needed. Defaults to None.
             columns (List[int], optional): index of the column to be processed. Defaults to None.
-                                            if None, all columns are processed
+                If None, all columns will be processed
+                Will only be applied when sep is specified.
             header (bool, optional): true if the file contains header. Defaults to None.
         """
-
         super().__init__(stream=True)
         self.encoding = encoding
         self.sep = sep
@@ -232,7 +262,7 @@ class FileStreamCleaner(BaseCleaner):
         """Clean a sample of the input file by applying all selected functions in sequence.
 
         Args:
-            n_lines (int, optional): number of lines to be processed at the same time. Defaults to 1000.
+            n_lines (int, optional): number of lines to process. Defaults to 1000.
         """
         self._prepare_clean()
         self.clear_text()
@@ -243,6 +273,11 @@ class FileStreamCleaner(BaseCleaner):
                 break
 
     def get_unique_chars(self):
+        """Find all unique characters presented in the file
+
+        Returns:
+            List[str]: list of all unique characters
+        """
         self.file.seek(0)
         chars = set()
         with self._get_tqdm_file() as pbar:
@@ -262,6 +297,25 @@ class FolderStreamCleaner:
     def __init__(
             self, folderdir: str, savedir: str = None, include_subdir=False, encoding="utf8",
             sep: str = None, columns: List[int] = None, header: bool = None, n_jobs=4) -> None:
+        """Process all files in a given folder
+
+        Args:
+            folderdir (str): path of the folder in which all files will be processed
+            savedir (str, optional): save directory path. Defaults to None.
+                If None, files will be saved in the same directory with suffix '_cleaned'.
+                Files will be saved in the same tree structure.
+            include_subdir (bool, optional): If True, files in sub directories will be processed. Defaults to False.
+            encoding (str, optional): encoding of the input file. Defaults to "utf8".
+            sep (str, optional): separator to split columns if needed. Defaults to None.
+            columns (List[int], optional): index of the column to be processed. Defaults to None.
+                If None, all columns will be processed.
+                Will only be applied when sep is specified.
+            header (bool, optional): true if the files contain header. Defaults to None.
+            n_jobs (int, optional): number of files to be processed at the same time. Defaults to 4.
+
+        Raises:
+            ValueError: if no files are found.
+        """
         self.folderdir = folderdir
         self.savedir = savedir
         self.include_subdir = include_subdir
@@ -288,6 +342,12 @@ class FolderStreamCleaner:
         return self.files
 
     def clean_file(self, file, sample=False):
+        """Clean a file by applying all selected functions in sequence.
+
+        Args:
+            file (str): path to the file to be processed
+            sample (bool, optional): True to clean a sample (1000 lines) of the file. Defaults to False.
+        """
         savefile = self._get_save_dir(file)
         filestream = FileStreamCleaner(
             file, savefile, sep=self.sep, columns=self.columns, header=self.header)
@@ -305,9 +365,14 @@ class FolderStreamCleaner:
         return savefile
 
     def clean_files(self, sample=False):
-        self.run(lambda file: self.clean_file(file, sample), self.files)
+        """Clean all files by applying all selected functions in sequence.
 
-    def run(self, fn, my_iter):
+        Args:
+            sample (bool, optional): True to clean a sample (1000 lines) of the file. Defaults to False.
+        """
+        self._run(lambda file: self.clean_file(file, sample), self.files)
+
+    def _run(self, fn, my_iter):
         with con.ThreadPoolExecutor(max_workers=self.n_jobs) as executor:
             futures = []
             for item in my_iter:

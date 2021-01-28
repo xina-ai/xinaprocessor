@@ -11,6 +11,6 @@ setup(
     tests_require=['pytest'],
     author="Xina AI",
     url='https://github.com/xina-ai/xinaprocessor',
-    description="Arabic processing library",
+    description="Xina processing library",
     packages=find_packages(include=['xinaprocessor'])
 )
