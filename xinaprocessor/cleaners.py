@@ -72,11 +72,75 @@ class TextCleaner(BaseCleaner):
     def count_lines_with_contain(self, text: str):
         return list(filter(self.lines, lambda line: text in line))
 
+    def head(self, num_samples=1):
+        """Return lines from the start of the text
+
+        Args:
+            num_samples (int, optional): number of lines to return. Defaults to 1.
+
+        Raises:
+            IndexError: If index is out of range.
+
+        Returns:
+            List[str]: list of top (num_samples) strings
+        """
+        if num_samples < 0 or num_samples >= len(self):
+            raise IndexError(
+                f"Number of samples must be in range [0, f{len(self)}]. Your input {num_samples}")
+        return self.lines[:num_samples]
+
+    def tail(self, num_samples=1):
+        """Return lines from the end of the text
+
+        Args:
+            num_samples (int, optional): number of lines to return. Defaults to 1.
+
+        Raises:
+            IndexError: If index is out of range.
+
+        Returns:
+            List[str]: list of bottom (num_samples) strings
+        """
+        if num_samples < 0 or num_samples >= len(self):
+            raise IndexError(
+                f"Number of samples must be in range [0, f{len(self)}]. Your input {num_samples}")
+        return self.lines[-num_samples:]
+
+    def sample(self, num_samples=1, seed=0):
+        """Randomly select sample from text
+
+        Args:
+            num_samples (int, optional): number of lines to select. Defaults to 1.
+            seed (int, optional): seed for reproducibility. Defaults to 0.
+
+        Raises:
+            IndexError: If index is out of range.
+
+        Returns:
+            List[str]: list of randomly selected (num_samples) strings
+        """
+        if num_samples < 0 or num_samples >= len(self):
+            raise IndexError(
+                f"Number of samples must be in range [0, f{len(self)}]. Your input {num_samples}")
+        random.seed(seed)
+        return random.sample(self.lines, num_samples)
+
     def remove_duplicates(self):
+        """Remove all duplicates from text
+        """
         self.lines = list(dict.fromkeys(self.lines))
         return self
 
-    def save2file(self, path, encoding):
+    def save2file(self, path: str, encoding: str):
+        """Save text to file
+
+        Args:
+            path (str): file path to save the text to
+            encoding (str): file encoding
+
+        Raises:
+            FileExistsError: If file already exists
+        """
         if os.path.isfile(path):
             raise FileExistsError('File already exists.')
         with open(path, 'w', encoding=encoding) as f:

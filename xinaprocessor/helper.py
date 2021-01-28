@@ -76,6 +76,11 @@ def replace_repeated_chars(text: str, repeated=1, keep_char=1):
     return re.sub(pattern, r"\1" * keep_char, text)
 
 
+def contains_repeated_chars(text: str, repeated=1):
+    pattern = r"(.)\1{}".format(f"{{{repeated-1},}}")
+    return True if re.search(pattern, text) else False
+
+
 def train_test_split(x: list, test_size: float, random_seed=None):
     assert test_size > 0.0 and test_size < 1.0, "test size sould be between 0 and 1"
     assert len(x) > 1, "the length of the given list should be greater than 1"
