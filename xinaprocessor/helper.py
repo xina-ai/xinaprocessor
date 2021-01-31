@@ -75,6 +75,8 @@ def replace_repeated_chars(text: str, repeated=1, keep_char=1):
     pattern = r"(.)\1{}".format(f"{{{repeated-1},}}")
     return re.sub(pattern, r"\1" * keep_char, text)
 
+def replace_except(text: str, keep_symbols: str, replace_by: str) -> str:
+    return re.sub(f"[^{keep_symbols}]", replace_by, text)
 
 def contains_repeated_chars(text: str, repeated=1):
     pattern = r"(.)\1{}".format(f"{{{repeated-1},}}")
