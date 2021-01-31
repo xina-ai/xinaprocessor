@@ -204,6 +204,22 @@ class BaseCleaner:
     # endregion
     # region filter functions
 
+    def drop_lines_below_count(self, symbol: str, threshold: int):
+        """Drops any line has frequency for a certain symbol below the threshold
+        """
+        filter_fn = (
+            lambda line: line.count(symbol) >= threshold
+        )
+        return self._filter_lines(filter_fn)
+
+    def drop_lines_above_count(self, symbol: str, threshold: int):
+        """Drops any line has frequency for a certain symbol more than the threshold
+        """
+        filter_fn = (
+            lambda line: line.count(symbol) <= threshold
+        )
+        return self._filter_lines(filter_fn)
+        
     def drop_empty_lines(self):
         """Drop all empty lines.
         """
@@ -379,17 +395,6 @@ class BaseCleaner:
             lambda line: replace_except(line, keep_symbols, replace_by)
         )
     
-    def drop_below_count(self, symbol: str, threshold: int):
-        filter_fn = (
-            lambda line: line.count(symbol) < threshold
-        )
-        return self._filter_lines(filter_fn)
-
-    def drop_above_count(self, symbol: str, threshold: int):
-        filter_fn = (
-            lambda line: line.count(symbol) > threshold
-        )
-        return self._filter_lines(filter_fn)
 
     def convert_arabic_numbers_to_english(self):
         """Convert arabic numbers to english numbers.
