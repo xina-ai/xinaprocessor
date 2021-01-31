@@ -6,7 +6,7 @@ import os
 import sys
 from typing import List
 import concurrent.futures as con
-
+from statistics import median_grouped, stdev, variance
 
 class TextCleaner(BaseCleaner):
     def __init__(self, text: str, sep="\n"):
@@ -72,6 +72,54 @@ class TextCleaner(BaseCleaner):
     def count_lines_with_contain(self, text: str):
         return list(filter(self.lines, lambda line: text in line))
 
+    def get_lines_lens(self) ->list:
+        """Returns the a list of lengths, where each element in the list represents
+         the length of the corresponding line
+        """
+        return list(map(len, self.lines))
+
+    def get_max_len(self) -> int:
+        """Returns the length of the line with the highest length
+        """
+        return max(self.get_lines_lens())
+
+    def get_min_len(self) -> int:
+        """Returns the length of the line with the lowest length
+        """
+        return min(self.get_lines_lens())
+    
+    def get_avg_len(self) -> float:
+        """Returns the average of all lines' length
+        """
+        return sum(self.get_lines_lens())/len(self)
+
+    def get_median_len(self) -> float:
+        """Returns the Median of all lines' length
+        """
+        return median_grouped(self.get_lines_lens())
+
+    def get_var_len(self) -> float:
+        """Returns the variance of all lines' length
+        """
+        return variance(self.get_lines_lens())
+
+    def get_std_len(self) -> float:
+        """Returns the standard deviation of all lines' length
+        """
+        return stdev(self.get_lines_lens())
+
+    def describe_lines_len(self) -> dict:
+        """Return dictionary contains a statistical description about the lines' lengths
+        """
+        lines_lens = self.get_lines_lens()
+        return {"max_length": max(lines_lens),
+                "min_length": min(lines_lens),
+                "average_length": sum(lines_lens)/len(lines_lens),
+                "median_length": median_grouped(lines_lens),
+                "length_variance": variance(lines_lens),
+                "length_standard_deviation": stdev(lines_lens)
+                }
+    
     def head(self, num_samples=1):
         """Return lines from the start of the text
 

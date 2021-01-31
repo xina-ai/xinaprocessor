@@ -374,6 +374,23 @@ class BaseCleaner:
             lambda line: replace_repeated_chars(line, repeated, keep_char)
         )
 
+    def replace_except(self, keep_symbols: str, replace_by: str):
+        return self._map_lines(
+            lambda line: replace_except(line, keep_symbols, replace_by)
+        )
+    
+    def drop_below_count(self, symbol: str, threshold: int):
+        filter_fn = (
+            lambda line: line.count(symbol) < threshold
+        )
+        return self._filter_lines(filter_fn)
+
+    def drop_above_count(self, symbol: str, threshold: int):
+        filter_fn = (
+            lambda line: line.count(symbol) > threshold
+        )
+        return self._filter_lines(filter_fn)
+
     def convert_arabic_numbers_to_english(self):
         """Convert arabic numbers to english numbers.
         """
