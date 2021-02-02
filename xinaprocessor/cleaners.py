@@ -8,6 +8,7 @@ from typing import List
 import concurrent.futures as con
 from statistics import median_grouped, stdev, variance
 
+
 class TextCleaner(BaseCleaner):
     def __init__(self, text: str, sep="\n"):
         super().__init__()
@@ -72,7 +73,7 @@ class TextCleaner(BaseCleaner):
     def count_lines_with_contain(self, text: str):
         return list(filter(self.lines, lambda line: text in line))
 
-    def get_lines_lens(self) ->list:
+    def get_lines_lens(self) -> list:
         """Returns the a list of lengths, where each element in the list represents
          the length of the corresponding line
         """
@@ -87,11 +88,11 @@ class TextCleaner(BaseCleaner):
         """Returns the length of the line with the lowest length
         """
         return min(self.get_lines_lens())
-    
+
     def get_avg_len(self) -> float:
         """Returns the average of all lines' length
         """
-        return sum(self.get_lines_lens())/len(self)
+        return sum(self.get_lines_lens()) / len(self)
 
     def get_median_len(self) -> float:
         """Returns the Median of all lines' length
@@ -114,12 +115,12 @@ class TextCleaner(BaseCleaner):
         lines_lens = self.get_lines_lens()
         return {"max_length": max(lines_lens),
                 "min_length": min(lines_lens),
-                "average_length": sum(lines_lens)/len(lines_lens),
+                "average_length": sum(lines_lens) / len(lines_lens),
                 "median_length": median_grouped(lines_lens),
                 "length_variance": variance(lines_lens),
                 "length_standard_deviation": stdev(lines_lens)
                 }
-    
+
     def head(self, num_samples=1):
         """Return lines from the start of the text
 
@@ -204,7 +205,7 @@ class TextCleaner(BaseCleaner):
             TextCleaner: self
         """
         assert keep is not None
-        if type(keep) != list:
+        if not isinstance(keep, list):
             keep = list(keep)
         self.lines = self._mapper(self.lines, lambda x: keep_only(x, keep))
 
@@ -229,20 +230,21 @@ class TextCleaner(BaseCleaner):
 
 
 class FileCleaner(TextCleaner):
+    """Process and clean file
+
+    Args:
+        filepath (str): path of the file to be processed
+        savepath (str, optional): path to save the processed text. Defaults to None
+        encoding (str, optional): encoding of the input file. Defaults to "utf8".
+        header (bool, optional): true if the file contains header. Defaults to None.
+
+    Raises:
+        FileNotFoundError: [description]
+        OSError: [description]
+    """
+
     def __init__(self, filepath: str, savepath: str = None, encoding="utf8",
                  header: bool = None, large: bool = False) -> None:
-        """Process and clean file
-
-        Args:
-            filepath (str): path of the file to be processed
-            savepath (str, optional): path to save the processed text. Defaults to None
-            encoding (str, optional): encoding of the input file. Defaults to "utf8".
-            header (bool, optional): true if the file contains header. Defaults to None.
-
-        Raises:
-            FileNotFoundError: [description]
-            OSError: [description]
-        """
         if not os.path.isfile(filepath):
             raise FileNotFoundError("File does not exist.")
         # raise error if the file size is larger than one GB
@@ -262,21 +264,22 @@ class FileCleaner(TextCleaner):
 
 
 class FileStreamCleaner(BaseCleaner):
+    """Clean file in a streaming manner (fast + memory efficient)
+
+    Args:
+        filepath (str): path of the file to be processed
+        savepath (str, optional): path to save the processed text. Defaults to None
+            If None, the file will be saved in the same directory with a suffix '_cleaned'.
+        encoding (str, optional): encoding of the input file. Defaults to "utf8".
+        sep (str, optional): separator to split columns if needed. Defaults to None.
+        columns (List[int], optional): index of the column to be processed. Defaults to None.
+            If None, all columns will be processed
+            Will only be applied when sep is specified.
+        header (bool, optional): true if the file contains header. Defaults to None.
+    """
+
     def __init__(self, filepath: str, savepath: str = None, encoding="utf8",
                  sep: str = None, columns: List[int] = None, header: bool = None) -> None:
-        """Clean file in a streaming manner (fast + memory efficient)
-
-        Args:
-            filepath (str): path of the file to be processed
-            savepath (str, optional): path to save the processed text. Defaults to None
-                If None, the file will be saved in the same directory with a suffix '_cleaned'.
-            encoding (str, optional): encoding of the input file. Defaults to "utf8".
-            sep (str, optional): separator to split columns if needed. Defaults to None.
-            columns (List[int], optional): index of the column to be processed. Defaults to None.
-                If None, all columns will be processed
-                Will only be applied when sep is specified.
-            header (bool, optional): true if the file contains header. Defaults to None.
-        """
         super().__init__(stream=True)
         self.encoding = encoding
         self.sep = sep
@@ -405,28 +408,29 @@ class FileStreamCleaner(BaseCleaner):
 
 
 class FolderStreamCleaner:
+    """Process all files in a given folder
+
+    Args:
+        folderdir (str): path of the folder in which all files will be processed
+        savedir (str, optional): save directory path. Defaults to None.
+            If None, files will be saved in the same directory with suffix '_cleaned'.
+            Files will be saved in the same tree structure.
+        include_subdir (bool, optional): If True, files in sub directories will be processed. Defaults to False.
+        encoding (str, optional): encoding of the input file. Defaults to "utf8".
+        sep (str, optional): separator to split columns if needed. Defaults to None.
+        columns (List[int], optional): index of the column to be processed. Defaults to None.
+            If None, all columns will be processed.
+            Will only be applied when sep is specified.
+        header (bool, optional): true if the files contain header. Defaults to None.
+        n_jobs (int, optional): number of files to be processed at the same time. Defaults to 4.
+
+    Raises:
+        ValueError: if no files are found.
+    """
+
     def __init__(
             self, folderdir: str, savedir: str = None, include_subdir=False, encoding="utf8",
             sep: str = None, columns: List[int] = None, header: bool = None, n_jobs=4) -> None:
-        """Process all files in a given folder
-
-        Args:
-            folderdir (str): path of the folder in which all files will be processed
-            savedir (str, optional): save directory path. Defaults to None.
-                If None, files will be saved in the same directory with suffix '_cleaned'.
-                Files will be saved in the same tree structure.
-            include_subdir (bool, optional): If True, files in sub directories will be processed. Defaults to False.
-            encoding (str, optional): encoding of the input file. Defaults to "utf8".
-            sep (str, optional): separator to split columns if needed. Defaults to None.
-            columns (List[int], optional): index of the column to be processed. Defaults to None.
-                If None, all columns will be processed.
-                Will only be applied when sep is specified.
-            header (bool, optional): true if the files contain header. Defaults to None.
-            n_jobs (int, optional): number of files to be processed at the same time. Defaults to 4.
-
-        Raises:
-            ValueError: if no files are found.
-        """
         self.folderdir = folderdir
         self.savedir = savedir
         self.include_subdir = include_subdir
@@ -493,4 +497,3 @@ class FolderStreamCleaner:
 
     def __len__(self):
         return len(self.files)
-
