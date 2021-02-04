@@ -91,12 +91,36 @@ class TextCleaner(BaseCleaner):
         return list(set("".join(self.lines)))
 
     def get_lines_below_len(self, length: int):
+        """Extracts lines with length below a threshold
+
+        Args:
+            length (int): length of characters to consider.
+
+        Returns:
+            List[str]: list of lines with length of characters below `length`
+        """
         return list(filter(self.lines, lambda line: len(line) < length))
 
     def get_lines_above_len(self, length: int):
+        """Extracts lines with length above a threshold
+
+        Args:
+            length (int): length of characters to consider.
+
+        Returns:
+            List[str]: list of lines with length of characters above `length`
+        """
         return list(filter(self.lines, lambda line: len(line) > length))
 
     def get_lines_with_len(self, length: int):
+        """Extracts lines with length equal to a threshold
+
+        Args:
+            length (int): length of characters to consider.
+
+        Returns:
+            List[str]: list of lines with length of characters equal to `length`
+        """
         return list(filter(self.lines, lambda line: len(line) == length))
 
     def count_lines_with_contain(self, text: str):
