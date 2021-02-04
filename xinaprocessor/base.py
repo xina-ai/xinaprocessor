@@ -462,7 +462,7 @@ class BaseCleaner:
         """Return lines
 
         Returns:
-            [type]: [description]
+            List[str]: list of all lines
         """
         return self.lines
 

@@ -10,18 +10,42 @@ from statistics import median_grouped, stdev, variance
 
 
 class TextCleaner(BaseCleaner):
-    def __init__(self, text: str, sep="\n"):
+    def __init__(self, text: str, sep: str = "\n"):
+        """A class to clean text.
+
+        Args:
+            text (str): Input text to be cleaned.
+            sep (str, optional): Separator to split text on. Defaults to "\n".
+        """
         super().__init__()
 
         self.sep = sep
         self.set_text(text, sep)
 
     @staticmethod
-    def create_cleaner(text: str, sep="\n"):
+    def create_cleaner(text: str, sep: str = "\n"):
+        """Creates a TextCleaner object given text and sep.
+
+        Args:
+            text (str): Input text to be cleaned.
+            sep (str, optional): Separator to split text on. Defaults to "\n".
+
+        Returns:
+            TextCleaner: text cleaner object.
+        """
         return TextCleaner(text, sep)
 
     @staticmethod
-    def create_cleaner_from_list(lst, sep="\n"):
+    def create_cleaner_from_list(lst: List[str], sep: str = "\n"):
+        """Creates a TextCleaner object given list of lines.
+
+        Args:
+            lst (List[str]): List of lines to be cleaned
+            sep (str, optional): Separator used to join the lines. Defaults to "\n".
+
+        Returns:
+            TextCleaner: text cleaner object.
+        """
         cleaner = TextCleaner.create_cleaner('', sep)
         cleaner.lines = lst
         return cleaner
@@ -59,6 +83,11 @@ class TextCleaner(BaseCleaner):
         return self._join_text(self._get(ARABIC_CHARS, remove_tashkeel=False))
 
     def get_unique_chars(self):
+        """Extracts all unique characters in the text
+
+        Returns:
+            List[str]: List of all unique characters
+        """
         return list(set("".join(self.lines)))
 
     def get_lines_below_len(self, length: int):
@@ -237,10 +266,13 @@ class FileCleaner(TextCleaner):
         savepath (str, optional): path to save the processed text. Defaults to None
         encoding (str, optional): encoding of the input file. Defaults to "utf8".
         header (bool, optional): true if the file contains header. Defaults to None.
+        large (bool, optional): true if you want to process large files. Defaults to False
 
     Raises:
-        FileNotFoundError: [description]
-        OSError: [description]
+        FileNotFoundError: If file does not exist.
+        OSError: If file size is larger than 1 GB.
+
+    Examples:
     """
 
     def __init__(self, filepath: str, savepath: str = None, encoding="utf8",
