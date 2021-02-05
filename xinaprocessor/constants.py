@@ -16,7 +16,7 @@ NORMAL_ALEF = "ا"
 HAMZA_CHARS = "ءؤئ" + "\u0655\u0656"  # Arabic Hamza Above and Below
 NORMAL_HAMZA = "ء"
 LAM_ALEF_COMBINED = [
-    "\ufef9",  # Lam Alef
+    "\ufefb",  # Lam Alef
     "\ufef7",  # Lam Alef Hamza Above
     "\ufef9",  # Lam Alef Hamza Below
     "\ufef5",  # Lam Alef Madda Above
