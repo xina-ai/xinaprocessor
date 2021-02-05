@@ -7,13 +7,14 @@ import operator
 
 
 class BaseCleaner:
-    def __init__(self, lines: List[str] = [], stream=False) -> None:
-        """Base class for all cleaners, it contains all basic functionality of the cleaner
+    """Base class for all cleaners, it contains all basic functionality of the cleaner
 
-        Args:
-            lines (List[str]): list of strings, text to be processed
-            stream (bool): whether to use streaming or not
-        """
+    Args:
+        lines (List[str]): list of strings, text to be processed
+        stream (bool): whether to use streaming or not
+    """
+
+    def __init__(self, lines: List[str] = [], stream=False) -> None:
         self.lines = lines
         self.stream = stream
         # used for streaming
@@ -130,7 +131,7 @@ class BaseCleaner:
         return self._filter_map(self.lines, fn)
 
     def _filter_map(self, inp_list, fn):
-        assert type(inp_list) == list
+        assert isinstance(inp_list, list)
         fnc = partial(filter, fn)
         return self._apply(inp_list, fnc)
 
@@ -151,7 +152,7 @@ class BaseCleaner:
         return self
 
     def _get(self, to_keep, remove_tashkeel=True, remove_tatweel=True):
-        if type(to_keep) != list:
+        if not isinstance(to_keep, list):
             to_keep = list(to_keep)
         if remove_tashkeel:
             self.remove_tashkeel()
@@ -167,7 +168,7 @@ class BaseCleaner:
         return self._map(self.lines, fn)
 
     def _mapper(self, list_map, fn):
-        assert type(list_map) == list
+        assert isinstance(list_map, list)
         fnc = partial(map, fn)
         if self.stream:
             self._sequential.add(fnc)
@@ -177,13 +178,13 @@ class BaseCleaner:
 
     def _remove(self, remove):
         assert remove is not None
-        if type(remove) != list:
+        if not isinstance(remove, list):
             remove = list(remove)
         return self._map_lines(lambda line: replace_list(remove, line))
 
     def _replace(self, replace, rep_with):
         assert replace is not None
-        if type(replace) != list:
+        if not isinstance(replace, list):
             replace = list(replace)
         return self._map_lines(lambda line: replace_list(replace, line, rep_with))
 
@@ -203,6 +204,22 @@ class BaseCleaner:
         return self._apply_on_lines(fnc)._apply_on_lines(fnc2)
     # endregion
     # region filter functions
+
+    def drop_lines_below_count(self, symbol: str, threshold: int):
+        """Drops any line has frequency for a certain symbol below the threshold
+        """
+        filter_fn = (
+            lambda line: line.count(symbol) >= threshold
+        )
+        return self._filter_lines(filter_fn)
+
+    def drop_lines_above_count(self, symbol: str, threshold: int):
+        """Drops any line has frequency for a certain symbol more than the threshold
+        """
+        filter_fn = (
+            lambda line: line.count(symbol) <= threshold
+        )
+        return self._filter_lines(filter_fn)
 
     def drop_empty_lines(self):
         """Drop all empty lines.
@@ -374,6 +391,11 @@ class BaseCleaner:
             lambda line: replace_repeated_chars(line, repeated, keep_char)
         )
 
+    def replace_except(self, keep_symbols: str, replace_by: str):
+        return self._map_lines(
+            lambda line: replace_except(line, keep_symbols, replace_by)
+        )
+
     def convert_arabic_numbers_to_english(self):
         """Convert arabic numbers to english numbers.
         """
@@ -440,7 +462,7 @@ class BaseCleaner:
         """Return lines
 
         Returns:
-            [type]: [description]
+            List[str]: list of all lines
         """
         return self.lines
 

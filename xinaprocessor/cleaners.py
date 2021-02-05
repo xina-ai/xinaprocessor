@@ -6,21 +6,46 @@ import os
 import sys
 from typing import List
 import concurrent.futures as con
+from statistics import median_grouped, stdev, variance
 
 
 class TextCleaner(BaseCleaner):
-    def __init__(self, text: str, sep="\n"):
+    def __init__(self, text: str, sep: str = "\n"):
+        """A class to clean text.
+
+        Args:
+            text (str): Input text to be cleaned.
+            sep (str, optional): Separator to split text on. Defaults to "\n".
+        """
         super().__init__()
 
         self.sep = sep
         self.set_text(text, sep)
 
     @staticmethod
-    def create_cleaner(text: str, sep="\n"):
+    def create_cleaner(text: str, sep: str = "\n"):
+        """Creates a TextCleaner object given text and sep.
+
+        Args:
+            text (str): Input text to be cleaned.
+            sep (str, optional): Separator to split text on. Defaults to "\n".
+
+        Returns:
+            TextCleaner: text cleaner object.
+        """
         return TextCleaner(text, sep)
 
     @staticmethod
-    def create_cleaner_from_list(lst, sep="\n"):
+    def create_cleaner_from_list(lst: List[str], sep: str = "\n"):
+        """Creates a TextCleaner object given list of lines.
+
+        Args:
+            lst (List[str]): List of lines to be cleaned
+            sep (str, optional): Separator used to join the lines. Defaults to "\n".
+
+        Returns:
+            TextCleaner: text cleaner object.
+        """
         cleaner = TextCleaner.create_cleaner('', sep)
         cleaner.lines = lst
         return cleaner
@@ -58,19 +83,96 @@ class TextCleaner(BaseCleaner):
         return self._join_text(self._get(ARABIC_CHARS, remove_tashkeel=False))
 
     def get_unique_chars(self):
+        """Extracts all unique characters in the text
+
+        Returns:
+            List[str]: List of all unique characters
+        """
         return list(set("".join(self.lines)))
 
     def get_lines_below_len(self, length: int):
+        """Extracts lines with length below a threshold
+
+        Args:
+            length (int): length of characters to consider.
+
+        Returns:
+            List[str]: list of lines with length of characters below `length`
+        """
         return list(filter(self.lines, lambda line: len(line) < length))
 
     def get_lines_above_len(self, length: int):
+        """Extracts lines with length above a threshold
+
+        Args:
+            length (int): length of characters to consider.
+
+        Returns:
+            List[str]: list of lines with length of characters above `length`
+        """
         return list(filter(self.lines, lambda line: len(line) > length))
 
     def get_lines_with_len(self, length: int):
+        """Extracts lines with length equal to a threshold
+
+        Args:
+            length (int): length of characters to consider.
+
+        Returns:
+            List[str]: list of lines with length of characters equal to `length`
+        """
         return list(filter(self.lines, lambda line: len(line) == length))
 
     def count_lines_with_contain(self, text: str):
         return list(filter(self.lines, lambda line: text in line))
+
+    def get_lines_lens(self) -> list:
+        """Returns the a list of lengths, where each element in the list represents
+         the length of the corresponding line
+        """
+        return list(map(len, self.lines))
+
+    def get_max_len(self) -> int:
+        """Returns the length of the line with the highest length
+        """
+        return max(self.get_lines_lens())
+
+    def get_min_len(self) -> int:
+        """Returns the length of the line with the lowest length
+        """
+        return min(self.get_lines_lens())
+
+    def get_avg_len(self) -> float:
+        """Returns the average of all lines' length
+        """
+        return sum(self.get_lines_lens()) / len(self)
+
+    def get_median_len(self) -> float:
+        """Returns the Median of all lines' length
+        """
+        return median_grouped(self.get_lines_lens())
+
+    def get_var_len(self) -> float:
+        """Returns the variance of all lines' length
+        """
+        return variance(self.get_lines_lens())
+
+    def get_std_len(self) -> float:
+        """Returns the standard deviation of all lines' length
+        """
+        return stdev(self.get_lines_lens())
+
+    def describe_lines_len(self) -> dict:
+        """Return dictionary contains a statistical description about the lines' lengths
+        """
+        lines_lens = self.get_lines_lens()
+        return {"max_length": max(lines_lens),
+                "min_length": min(lines_lens),
+                "average_length": sum(lines_lens) / len(lines_lens),
+                "median_length": median_grouped(lines_lens),
+                "length_variance": variance(lines_lens),
+                "length_standard_deviation": stdev(lines_lens)
+                }
 
     def head(self, num_samples=1):
         """Return lines from the start of the text
@@ -156,7 +258,7 @@ class TextCleaner(BaseCleaner):
             TextCleaner: self
         """
         assert keep is not None
-        if type(keep) != list:
+        if not isinstance(keep, list):
             keep = list(keep)
         self.lines = self._mapper(self.lines, lambda x: keep_only(x, keep))
 
@@ -181,20 +283,24 @@ class TextCleaner(BaseCleaner):
 
 
 class FileCleaner(TextCleaner):
+    """Process and clean file
+
+    Args:
+        filepath (str): path of the file to be processed
+        savepath (str, optional): path to save the processed text. Defaults to None
+        encoding (str, optional): encoding of the input file. Defaults to "utf8".
+        header (bool, optional): true if the file contains header. Defaults to None.
+        large (bool, optional): true if you want to process large files. Defaults to False
+
+    Raises:
+        FileNotFoundError: If file does not exist.
+        OSError: If file size is larger than 1 GB.
+
+    Examples:
+    """
+
     def __init__(self, filepath: str, savepath: str = None, encoding="utf8",
                  header: bool = None, large: bool = False) -> None:
-        """Process and clean file
-
-        Args:
-            filepath (str): path of the file to be processed
-            savepath (str, optional): path to save the processed text. Defaults to None
-            encoding (str, optional): encoding of the input file. Defaults to "utf8".
-            header (bool, optional): true if the file contains header. Defaults to None.
-
-        Raises:
-            FileNotFoundError: [description]
-            OSError: [description]
-        """
         if not os.path.isfile(filepath):
             raise FileNotFoundError("File does not exist.")
         # raise error if the file size is larger than one GB
@@ -214,21 +320,22 @@ class FileCleaner(TextCleaner):
 
 
 class FileStreamCleaner(BaseCleaner):
+    """Clean file in a streaming manner (fast + memory efficient)
+
+    Args:
+        filepath (str): path of the file to be processed
+        savepath (str, optional): path to save the processed text. Defaults to None
+            If None, the file will be saved in the same directory with a suffix '_cleaned'.
+        encoding (str, optional): encoding of the input file. Defaults to "utf8".
+        sep (str, optional): separator to split columns if needed. Defaults to None.
+        columns (List[int], optional): index of the column to be processed. Defaults to None.
+            If None, all columns will be processed
+            Will only be applied when sep is specified.
+        header (bool, optional): true if the file contains header. Defaults to None.
+    """
+
     def __init__(self, filepath: str, savepath: str = None, encoding="utf8",
                  sep: str = None, columns: List[int] = None, header: bool = None) -> None:
-        """Clean file in a streaming manner (fast + memory efficient)
-
-        Args:
-            filepath (str): path of the file to be processed
-            savepath (str, optional): path to save the processed text. Defaults to None
-                If None, the file will be saved in the same directory with a suffix '_cleaned'.
-            encoding (str, optional): encoding of the input file. Defaults to "utf8".
-            sep (str, optional): separator to split columns if needed. Defaults to None.
-            columns (List[int], optional): index of the column to be processed. Defaults to None.
-                If None, all columns will be processed
-                Will only be applied when sep is specified.
-            header (bool, optional): true if the file contains header. Defaults to None.
-        """
         super().__init__(stream=True)
         self.encoding = encoding
         self.sep = sep
@@ -357,28 +464,29 @@ class FileStreamCleaner(BaseCleaner):
 
 
 class FolderStreamCleaner:
+    """Process all files in a given folder
+
+    Args:
+        folderdir (str): path of the folder in which all files will be processed
+        savedir (str, optional): save directory path. Defaults to None.
+            If None, files will be saved in the same directory with suffix '_cleaned'.
+            Files will be saved in the same tree structure.
+        include_subdir (bool, optional): If True, files in sub directories will be processed. Defaults to False.
+        encoding (str, optional): encoding of the input file. Defaults to "utf8".
+        sep (str, optional): separator to split columns if needed. Defaults to None.
+        columns (List[int], optional): index of the column to be processed. Defaults to None.
+            If None, all columns will be processed.
+            Will only be applied when sep is specified.
+        header (bool, optional): true if the files contain header. Defaults to None.
+        n_jobs (int, optional): number of files to be processed at the same time. Defaults to 4.
+
+    Raises:
+        ValueError: if no files are found.
+    """
+
     def __init__(
             self, folderdir: str, savedir: str = None, include_subdir=False, encoding="utf8",
             sep: str = None, columns: List[int] = None, header: bool = None, n_jobs=4) -> None:
-        """Process all files in a given folder
-
-        Args:
-            folderdir (str): path of the folder in which all files will be processed
-            savedir (str, optional): save directory path. Defaults to None.
-                If None, files will be saved in the same directory with suffix '_cleaned'.
-                Files will be saved in the same tree structure.
-            include_subdir (bool, optional): If True, files in sub directories will be processed. Defaults to False.
-            encoding (str, optional): encoding of the input file. Defaults to "utf8".
-            sep (str, optional): separator to split columns if needed. Defaults to None.
-            columns (List[int], optional): index of the column to be processed. Defaults to None.
-                If None, all columns will be processed.
-                Will only be applied when sep is specified.
-            header (bool, optional): true if the files contain header. Defaults to None.
-            n_jobs (int, optional): number of files to be processed at the same time. Defaults to 4.
-
-        Raises:
-            ValueError: if no files are found.
-        """
         self.folderdir = folderdir
         self.savedir = savedir
         self.include_subdir = include_subdir
