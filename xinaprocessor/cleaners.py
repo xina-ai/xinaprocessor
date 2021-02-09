@@ -208,7 +208,7 @@ class TextCleaner(BaseCleaner):
                 f"Number of samples must be in range [0, f{len(self)}]. Your input {num_samples}")
         return self.lines[-num_samples:]
 
-    def sample(self, num_samples=1, seed=0):
+    def sample(self, num_samples=1, seed=None):
         """Randomly select sample from text
 
         Args:
@@ -224,7 +224,8 @@ class TextCleaner(BaseCleaner):
         if num_samples < 0 or num_samples >= len(self):
             raise IndexError(
                 f"Number of samples must be in range [0, f{len(self)}]. Your input {num_samples}")
-        random.seed(seed)
+        if seed:
+            random.seed(seed)
         return random.sample(self.lines, num_samples)
 
     def remove_duplicates(self):
