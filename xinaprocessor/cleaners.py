@@ -313,6 +313,7 @@ class FileCleaner(TextCleaner):
         self.file = open(filepath, "r", encoding=encoding)
         self.savepath = savepath
         self.encoding = encoding
+        
         if header:
             self.file = next(self.file)
         super().__init__(self.file.read())
