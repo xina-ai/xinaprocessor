@@ -302,19 +302,20 @@ class FileCleaner(TextCleaner):
 
     def __init__(self, filepath: str, savepath: str = None, encoding="utf8",
                  header: bool = None, large: bool = False) -> None:
+        
         if not os.path.isfile(filepath):
             raise FileNotFoundError("File does not exist.")
         # raise error if the file size is larger than one GB
         if not large and os.path.getsize(filepath) / 2 ** 30 > 1:
             raise OSError("File too large. It is prefable to use FileStreamCleaner instead.\n"
                           "Use large=True to disable this error.")
-
+        
         self.file = open(filepath, "r", encoding=encoding)
         self.savepath = savepath
         self.encoding = encoding
-
-        super().create_cleaner_from_list(self.file.readlines()[1:] if header
-                                         else self.file.readlines())
+        if header:
+            self.file = next(self.file)
+        super().__init__(self.file.read())
 
     def save(self):
         self.save2file(self.savepath, self.encoding)
