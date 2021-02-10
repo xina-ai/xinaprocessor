@@ -112,11 +112,12 @@ def arabic_to_transliteration(text: str):
     return text
 
 
-def str_count_words_frequency(text: str, sep=" "):
-    frequency = Counter(text.split(sep))
-    return frequency
+def str_count_frequency(text: str, sep= " ", word_level= True):
+    if word_level:
+        return Counter(text.split(sep))
+    return Counter(text)
 
 
-def doc_count_words_frequency(texts: list, split_by=" "):
+def doc_count_frequency(texts: list, split_by= " ", word_level= True):
     text = split_by.join(texts)
-    return str_count_words_frequency(text, split_by=split_by)
+    return str_count_frequency(text, sep= split_by, word_level= word_level)
