@@ -50,16 +50,19 @@ Getting Started
 
 
 
-To clean texts
-
+To clean text
 .. code:: python
 
    Text = "نص عربي!"
    Cleaner = cleaners.TextCleaner(text=Text)
    Cleaner.keep_arabic_only()
 
+
+
 To clean text File
+
 .. code:: python
+
    # Creating File MyData.txt
    FilePath = "MyData.txt"
    with open(FilePath, "w") as f:
@@ -71,8 +74,11 @@ To clean text File
    CleanedData = Cleaner.lines # the result will look like ['السطر الأول', 'السطر الثاني']
    CleanedText = Cleaner.text # the result will look like 'السطر الأول\nالسطر الثاني'
    
+   
 To clean large text File
+
 .. code:: python
+
    # This Cleaner is used for large text files, the cleaned texts will be saved to CleanedFile.txt file
    FilePath = "MyData.txt"
    CleanedPath = "CleanedFile.txt"
