@@ -39,3 +39,43 @@ Documentation
 ================
 
 Documentation is still in process here: https://xina-ai.github.io/xinaprocessor/
+
+
+Getting Started
+================
+
+.. code:: python
+
+   from xinaprocessor import cleaners 
+
+
+
+To clean texts
+
+.. code:: python
+
+   Text = "نص عربي!"
+   Cleaner = cleaners.TextCleaner(text=Text)
+   Cleaner.keep_arabic_only()
+
+To clean text File
+.. code:: python
+   # Creating File MyData.txt
+   FilePath = "MyData.txt"
+   with open(FilePath, "w") as f:
+      f.write("Aالسطر الأول\nالسطر الثاني!")
+   # Creating FileCleaner object
+   Cleaner = cleaners.FileCleaner(filepath=FilePath)
+   Cleaner.remove_english_text().remove_arabic_numbers().remove_punctuations()
+   # Tpo access the resulted data
+   CleanedData = Cleaner.lines # the result will look like ['السطر الأول', 'السطر الثاني']
+   CleanedText = Cleaner.text # the result will look like 'السطر الأول\nالسطر الثاني'
+   
+To clean large text File
+.. code:: python
+   # This Cleaner is used for large text files, the cleaned texts will be saved to CleanedFile.txt file
+   FilePath = "MyData.txt"
+   CleanedPath = "CleanedFile.txt"
+   Cleaner = cleaners.FileStreamCleaner(filepath=FilePath, savepath=CleanedPath)
+   Cleaner.remove_hashtags().remove_honorific_signs().drop_empty_lines()
+   
