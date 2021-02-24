@@ -4,7 +4,9 @@ from typing import List
 from xinaprocessor.classes import Sequential
 from functools import partial, reduce
 import operator
+from xinaprocessor.decorators import show_empty_warning
 
+@show_empty_warning
 class BaseCleaner:
     """Base class for all cleaners, it contains all basic functionality of the cleaner
 
@@ -187,8 +189,8 @@ class BaseCleaner:
             replace = list(replace)
         return self._map_lines(lambda line: replace_list(replace, line, rep_with))
 
-    def _join_text(self, lines):
-        return self.sep.join(lines).strip() if self.sep else lines[0]
+    def _join_text(self, lines, sep):
+        return sep.join(lines).strip() if sep else lines[0]
     
     def _flatten_list(self, indices=None):
         """Flatten a list of lists and keeps only the provided indices.
