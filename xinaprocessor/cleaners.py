@@ -250,6 +250,9 @@ class TextCleaner(BaseCleaner):
             f.write('\n'.join(self.lines))
         print(f'File is saved to {path}.')
 
+    def _join_text(self, lines):
+        return self.sep.join(lines).strip() if self.sep else self.lines[0]
+
     def _clean(self, keep):
         """Clean the text by keeping only "keep" string.
 
@@ -281,6 +284,7 @@ class TextCleaner(BaseCleaner):
     def __add__(self, other):
         self._check_sep()
         return TextCleaner.create_cleaner_from_list(self.lines + other.lines, self.sep)
+
 
 
 class FileCleaner(TextCleaner):
