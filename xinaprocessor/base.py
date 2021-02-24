@@ -5,7 +5,6 @@ from xinaprocessor.classes import Sequential
 from functools import partial, reduce
 import operator
 
-
 class BaseCleaner:
     """Base class for all cleaners, it contains all basic functionality of the cleaner
 
@@ -188,9 +187,9 @@ class BaseCleaner:
             replace = list(replace)
         return self._map_lines(lambda line: replace_list(replace, line, rep_with))
 
-    def _join_text(self, sep=None):
-        return sep.join(self.lines) if sep else self.lines[0]
-
+    def _join_text(self, lines):
+        return self.sep.join(lines).strip() if self.sep else lines[0]
+    
     def _flatten_list(self, indices=None):
         """Flatten a list of lists and keeps only the provided indices.
         if indices is None, all indices are kept and flattened
@@ -411,7 +410,7 @@ class BaseCleaner:
 
     @ property
     def text(self):
-        return self._join_text('\n')
+        return '\n'.join(self.lines)
     # endregion
     # region keep functions
 
