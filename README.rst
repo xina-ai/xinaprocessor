@@ -34,3 +34,8 @@ Then cd to the directory and install the library with:
 .. code:: bash
 
    pip install -e .
+
+Documentation
+================
+
+Documentation is still in process here: https://xina-ai.github.io/xinaprocessor/
