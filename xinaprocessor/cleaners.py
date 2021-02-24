@@ -234,12 +234,12 @@ class TextCleaner(BaseCleaner):
         self.lines = list(dict.fromkeys(self.lines))
         return self
 
-    def save2file(self, path: str, encoding: str):
+    def save2file(self, path: str, encoding = 'utf-8'):
         """Save text to file
 
         Args:
             path (str): file path to save the text to
-            encoding (str): file encoding
+            encoding (optional str): file encoding, default 'utf-8'
 
         Raises:
             FileExistsError: If file already exists
