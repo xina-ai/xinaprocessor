@@ -51,6 +51,7 @@ Getting Started
 
 
 To clean text
+
 .. code:: python
 
    Text = "نص عربي!"
@@ -70,10 +71,11 @@ To clean text File
    # Creating FileCleaner object
    Cleaner = cleaners.FileCleaner(filepath=FilePath)
    Cleaner.remove_english_text().remove_arabic_numbers().remove_punctuations()
-   # Tpo access the resulted data
+   # To access the resulted data
    CleanedData = Cleaner.lines # the result will look like ['السطر الأول', 'السطر الثاني']
    CleanedText = Cleaner.text # the result will look like 'السطر الأول\nالسطر الثاني'
-   
+   # To save the proccessed/cleaned text to a file 
+   Cleaner.save2file('CleanedData.txt', encoding='utf-8')
    
 To clean large text File
 
@@ -83,5 +85,5 @@ To clean large text File
    FilePath = "MyData.txt"
    CleanedPath = "CleanedFile.txt"
    Cleaner = cleaners.FileStreamCleaner(filepath=FilePath, savepath=CleanedPath)
-   Cleaner.remove_hashtags().remove_honorific_signs().drop_empty_lines()
+   Cleaner.remove_hashtags().remove_honorific_signs().drop_empty_lines().clean()
    
