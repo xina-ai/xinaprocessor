@@ -1,0 +1,844 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>xinaprocessor package &mdash; XinaProcessor 0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="xinaprocessor" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> XinaProcessor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">xinaprocessor</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">xinaprocessor package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-xinaprocessor.base">xinaprocessor.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-xinaprocessor.classes">xinaprocessor.classes module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-xinaprocessor.cleaners">xinaprocessor.cleaners module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-xinaprocessor.constants">xinaprocessor.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-xinaprocessor.helper">xinaprocessor.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-xinaprocessor">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">XinaProcessor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">xinaprocessor</a> &raquo;</li>
+        
+      <li>xinaprocessor package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/xinaprocessor.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="xinaprocessor-package">
+<h1>xinaprocessor package<a class="headerlink" href="#xinaprocessor-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-xinaprocessor.base">
+<span id="xinaprocessor-base-module"></span><h2>xinaprocessor.base module<a class="headerlink" href="#module-xinaprocessor.base" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-xinaprocessor.classes">
+<span id="xinaprocessor-classes-module"></span><h2>xinaprocessor.classes module<a class="headerlink" href="#module-xinaprocessor.classes" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="xinaprocessor.classes.Operation">
+<em class="property">class </em><code class="sig-prename descclassname">xinaprocessor.classes.</code><code class="sig-name descname">Operation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fnc</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/classes.html#Operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.classes.Operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="py attribute">
+<dt id="xinaprocessor.classes.Operation.fnc">
+<code class="sig-name descname">fnc</code><em class="property">: Callable<span class="p">[</span><span class="p">[</span>Any<span class="p">]</span><span class="p">, </span>Any<span class="p">]</span></em><a class="headerlink" href="#xinaprocessor.classes.Operation.fnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="xinaprocessor.classes.Sequential">
+<em class="property">class </em><code class="sig-prename descclassname">xinaprocessor.classes.</code><code class="sig-name descname">Sequential</code><a class="reference internal" href="_modules/xinaprocessor/classes.html#Sequential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.classes.Sequential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="xinaprocessor.classes.Sequential.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fnc</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Any<span class="p">]</span><span class="p">, </span>Any<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/classes.html#Sequential.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.classes.Sequential.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.classes.Sequential.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lst</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>str<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/classes.html#Sequential.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.classes.Sequential.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.classes.Sequential.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/classes.html#Sequential.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.classes.Sequential.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-xinaprocessor.cleaners">
+<span id="xinaprocessor-cleaners-module"></span><h2>xinaprocessor.cleaners module<a class="headerlink" href="#module-xinaprocessor.cleaners" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="xinaprocessor.cleaners.FileCleaner">
+<em class="property">class </em><code class="sig-prename descclassname">xinaprocessor.cleaners.</code><code class="sig-name descname">FileCleaner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">savepath</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'utf8'</span></em>, <em class="sig-param"><span class="n">header</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">large</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#FileCleaner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.FileCleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#xinaprocessor.cleaners.TextCleaner" title="xinaprocessor.cleaners.TextCleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">xinaprocessor.cleaners.TextCleaner</span></code></a></p>
+<p>Process and clean file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – path of the file to be processed</p></li>
+<li><p><strong>savepath</strong> (<em>str</em><em>, </em><em>optional</em>) – path to save the processed text. Defaults to None</p></li>
+<li><p><strong>encoding</strong> (<em>str</em><em>, </em><em>optional</em>) – encoding of the input file. Defaults to “utf8”.</p></li>
+<li><p><strong>header</strong> (<em>bool</em><em>, </em><em>optional</em>) – true if the file contains header. Defaults to None.</p></li>
+<li><p><strong>large</strong> (<em>bool</em><em>, </em><em>optional</em>) – true if you want to process large files. Defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – If file does not exist.</p></li>
+<li><p><strong>OSError</strong> – If file size is larger than 1 GB.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Examples:</p>
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.FileCleaner.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#FileCleaner.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.FileCleaner.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="xinaprocessor.cleaners.FileStreamCleaner">
+<em class="property">class </em><code class="sig-prename descclassname">xinaprocessor.cleaners.</code><code class="sig-name descname">FileStreamCleaner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">savepath</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'utf8'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">columns</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">header</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#FileStreamCleaner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.FileStreamCleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">xinaprocessor.decorators.show_empty_warning.&lt;locals&gt;.Wrapper</span></code></p>
+<p>Clean file in a streaming manner (fast + memory efficient)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – path of the file to be processed</p></li>
+<li><p><strong>savepath</strong> (<em>str</em><em>, </em><em>optional</em>) – path to save the processed text. Defaults to None
+If None, the file will be saved in the same directory with a suffix ‘_cleaned’.</p></li>
+<li><p><strong>encoding</strong> (<em>str</em><em>, </em><em>optional</em>) – encoding of the input file. Defaults to “utf8”.</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – separator to split columns if needed. Defaults to None.</p></li>
+<li><p><strong>columns</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – index of the column to be processed. Defaults to None.
+If None, all columns will be processed
+Will only be applied when sep is specified.</p></li>
+<li><p><strong>header</strong> (<em>bool</em><em>, </em><em>optional</em>) – true if the file contains header. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.FileStreamCleaner.clean">
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_lines</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#FileStreamCleaner.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.FileStreamCleaner.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean the input file by applying all selected functions in sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_lines</strong> (<em>int</em><em>, </em><em>optional</em>) – number of lines to be processed at the same time. Defaults to 10.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.FileStreamCleaner.clean_sample">
+<code class="sig-name descname">clean_sample</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_lines</span><span class="o">=</span><span class="default_value">1000</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#FileStreamCleaner.clean_sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.FileStreamCleaner.clean_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean a sample of the input file by applying all selected functions in sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_lines</strong> (<em>int</em><em>, </em><em>optional</em>) – number of lines to process. Defaults to 1000.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.FileStreamCleaner.get_unique_chars">
+<code class="sig-name descname">get_unique_chars</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#FileStreamCleaner.get_unique_chars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.FileStreamCleaner.get_unique_chars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all unique characters presented in the file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of all unique characters</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="xinaprocessor.cleaners.FolderStreamCleaner">
+<em class="property">class </em><code class="sig-prename descclassname">xinaprocessor.cleaners.</code><code class="sig-name descname">FolderStreamCleaner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folderdir</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">savedir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">include_subdir</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'utf8'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">columns</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">header</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="o">=</span><span class="default_value">4</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#FolderStreamCleaner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.FolderStreamCleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Process all files in a given folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folderdir</strong> (<em>str</em>) – path of the folder in which all files will be processed</p></li>
+<li><p><strong>savedir</strong> (<em>str</em><em>, </em><em>optional</em>) – save directory path. Defaults to None.
+If None, files will be saved in the same directory with suffix ‘_cleaned’.
+Files will be saved in the same tree structure.</p></li>
+<li><p><strong>include_subdir</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, files in sub directories will be processed. Defaults to False.</p></li>
+<li><p><strong>encoding</strong> (<em>str</em><em>, </em><em>optional</em>) – encoding of the input file. Defaults to “utf8”.</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – separator to split columns if needed. Defaults to None.</p></li>
+<li><p><strong>columns</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – index of the column to be processed. Defaults to None.
+If None, all columns will be processed.
+Will only be applied when sep is specified.</p></li>
+<li><p><strong>header</strong> (<em>bool</em><em>, </em><em>optional</em>) – true if the files contain header. Defaults to None.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>optional</em>) – number of files to be processed at the same time. Defaults to 4.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if no files are found.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.FolderStreamCleaner.clean_file">
+<code class="sig-name descname">clean_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">sample</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#FolderStreamCleaner.clean_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.FolderStreamCleaner.clean_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean a file by applying all selected functions in sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>str</em>) – path to the file to be processed</p></li>
+<li><p><strong>sample</strong> (<em>bool</em><em>, </em><em>optional</em>) – True to clean a sample (1000 lines) of the file. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.FolderStreamCleaner.clean_files">
+<code class="sig-name descname">clean_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sample</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#FolderStreamCleaner.clean_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.FolderStreamCleaner.clean_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean all files by applying all selected functions in sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sample</strong> (<em>bool</em><em>, </em><em>optional</em>) – True to clean a sample (1000 lines) of the file. Defaults to False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="xinaprocessor.cleaners.TextCleaner">
+<em class="property">class </em><code class="sig-prename descclassname">xinaprocessor.cleaners.</code><code class="sig-name descname">TextCleaner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">sep</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'\n'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">xinaprocessor.decorators.show_empty_warning.&lt;locals&gt;.Wrapper</span></code></p>
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.count_lines_with_contain">
+<code class="sig-name descname">count_lines_with_contain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.count_lines_with_contain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.count_lines_with_contain" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.create_cleaner">
+<em class="property">static </em><code class="sig-name descname">create_cleaner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">sep</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'\n'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.create_cleaner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.create_cleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a TextCleaner object given text and sep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Input text to be cleaned.</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – Separator to split text on. Defaults to “\n”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>text cleaner object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#xinaprocessor.cleaners.TextCleaner" title="xinaprocessor.cleaners.TextCleaner">TextCleaner</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.create_cleaner_from_list">
+<em class="property">static </em><code class="sig-name descname">create_cleaner_from_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lst</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">sep</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'\n'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.create_cleaner_from_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.create_cleaner_from_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a TextCleaner object given list of lines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lst</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of lines to be cleaned</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – Separator used to join the lines. Defaults to “\n”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>text cleaner object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#xinaprocessor.cleaners.TextCleaner" title="xinaprocessor.cleaners.TextCleaner">TextCleaner</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.describe_lines_len">
+<code class="sig-name descname">describe_lines_len</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.describe_lines_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.describe_lines_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return dictionary contains a statistical description about the lines’ lengths</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_arabic_text">
+<code class="sig-name descname">get_arabic_text</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_arabic_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_arabic_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the Arabic text only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Arabic text</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_arabic_with_harakat">
+<code class="sig-name descname">get_arabic_with_harakat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_arabic_with_harakat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_arabic_with_harakat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract Arabic text and harakat only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Arabic text with harakat</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_arabic_with_numbers">
+<code class="sig-name descname">get_arabic_with_numbers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_arabic_with_numbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_arabic_with_numbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract Arabic text and numbers only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Arabic text with numbers</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_avg_len">
+<code class="sig-name descname">get_avg_len</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_avg_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_avg_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the average of all lines’ length</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_english_text">
+<code class="sig-name descname">get_english_text</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_english_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_english_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the English text only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>English text</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_lines_above_len">
+<code class="sig-name descname">get_lines_above_len</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_lines_above_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_lines_above_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts lines with length above a threshold</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>length</strong> (<em>int</em>) – length of characters to consider.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of lines with length of characters above <cite>length</cite></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_lines_below_len">
+<code class="sig-name descname">get_lines_below_len</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_lines_below_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_lines_below_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts lines with length below a threshold</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>length</strong> (<em>int</em>) – length of characters to consider.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of lines with length of characters below <cite>length</cite></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_lines_lens">
+<code class="sig-name descname">get_lines_lens</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_lines_lens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_lines_lens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the a list of lengths, where each element in the list represents
+the length of the corresponding line</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_lines_with_len">
+<code class="sig-name descname">get_lines_with_len</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_lines_with_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_lines_with_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts lines with length equal to a threshold</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>length</strong> (<em>int</em>) – length of characters to consider.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of lines with length of characters equal to <cite>length</cite></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_max_len">
+<code class="sig-name descname">get_max_len</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_max_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_max_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the length of the line with the highest length</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_median_len">
+<code class="sig-name descname">get_median_len</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_median_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_median_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Median of all lines’ length</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_min_len">
+<code class="sig-name descname">get_min_len</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_min_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_min_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the length of the line with the lowest length</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_std_len">
+<code class="sig-name descname">get_std_len</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_std_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_std_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the standard deviation of all lines’ length</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_unique_chars">
+<code class="sig-name descname">get_unique_chars</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_unique_chars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_unique_chars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts all unique characters in the text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of all unique characters</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.get_var_len">
+<code class="sig-name descname">get_var_len</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.get_var_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.get_var_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the variance of all lines’ length</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.head">
+<code class="sig-name descname">head</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_samples</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.head"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.head" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return lines from the start of the text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – number of lines to return. Defaults to 1.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>IndexError</strong> – If index is out of range.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of top (num_samples) strings</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.remove_duplicates">
+<code class="sig-name descname">remove_duplicates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.remove_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.remove_duplicates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all duplicates from text</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_samples</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly select sample from text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – number of lines to select. Defaults to 1.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>optional</em>) – seed for reproducibility. Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>IndexError</strong> – If index is out of range.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of randomly selected (num_samples) strings</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.save2file">
+<code class="sig-name descname">save2file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.save2file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.save2file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save text to file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – file path to save the text to</p></li>
+<li><p><strong>encoding</strong> (<em>str</em>) – file encoding</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileExistsError</strong> – If file already exists</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="xinaprocessor.cleaners.TextCleaner.tail">
+<code class="sig-name descname">tail</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_samples</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/cleaners.html#TextCleaner.tail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.cleaners.TextCleaner.tail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return lines from the end of the text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – number of lines to return. Defaults to 1.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>IndexError</strong> – If index is out of range.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of bottom (num_samples) strings</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-xinaprocessor.constants">
+<span id="xinaprocessor-constants-module"></span><h2>xinaprocessor.constants module<a class="headerlink" href="#module-xinaprocessor.constants" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-xinaprocessor.helper">
+<span id="xinaprocessor-helper-module"></span><h2>xinaprocessor.helper module<a class="headerlink" href="#module-xinaprocessor.helper" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="xinaprocessor.helper.arabic_to_transliteration">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">arabic_to_transliteration</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#arabic_to_transliteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.arabic_to_transliteration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.contains_persian">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">contains_persian</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#contains_persian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.contains_persian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.contains_repeated_chars">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">contains_repeated_chars</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">repeated</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#contains_repeated_chars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.contains_repeated_chars" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.contains_single_char">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">contains_single_char</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#contains_single_char"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.contains_single_char" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.doc_count_frequency">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">doc_count_frequency</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">texts</span><span class="p">:</span> <span class="n">list</span></em>, <em class="sig-param"><span class="n">split_by</span><span class="o">=</span><span class="default_value">' '</span></em>, <em class="sig-param"><span class="n">word_level</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#doc_count_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.doc_count_frequency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.export_text">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">export_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em>, <em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">list</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">'\n'</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'utf-8'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#export_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.export_text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.keep_only">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">keep_only</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">list_chars</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#keep_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.keep_only" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.multi_replace">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">multi_replace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keys</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#multi_replace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.multi_replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace each item in keys with the corresponding item in values in the input text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keys</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – a list of strings to be replaces</p></li>
+<li><p><strong>values</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of strings with same length of keys to with values to be replaced with</p></li>
+<li><p><strong>text</strong> (<em>str</em>) – input text to apply replacements on</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>text with strings in keys replaced with corresponding strings in values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.remove_emoji">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">remove_emoji</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#remove_emoji"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.remove_emoji" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.remove_extra_spaces">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">remove_extra_spaces</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">keep_spaces</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#remove_extra_spaces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.remove_extra_spaces" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.remove_hashtags">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">remove_hashtags</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#remove_hashtags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.remove_hashtags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.remove_links">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">remove_links</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#remove_links"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.remove_links" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.remove_mentions">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">remove_mentions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#remove_mentions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.remove_mentions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.remove_single_char_space_after">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">remove_single_char_space_after</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#remove_single_char_space_after"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.remove_single_char_space_after" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.remove_single_char_space_before">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">remove_single_char_space_before</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#remove_single_char_space_before"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.remove_single_char_space_before" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.replace_except">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">replace_except</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">keep_symbols</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">replace_by</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/xinaprocessor/helper.html#replace_except"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.replace_except" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.replace_list">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">replace_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">list_chars</span></em>, <em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">replace_with</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#replace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.replace_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.replace_repeated_chars">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">replace_repeated_chars</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">repeated</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">keep_char</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#replace_repeated_chars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.replace_repeated_chars" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.str_count_frequency">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">str_count_frequency</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">' '</span></em>, <em class="sig-param"><span class="n">word_level</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#str_count_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.str_count_frequency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.train_test_split">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">train_test_split</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="p">:</span> <span class="n">list</span></em>, <em class="sig-param"><span class="n">test_size</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">random_seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#train_test_split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.train_test_split" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="xinaprocessor.helper.transliteration_to_arabic">
+<code class="sig-prename descclassname">xinaprocessor.helper.</code><code class="sig-name descname">transliteration_to_arabic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/xinaprocessor/helper.html#transliteration_to_arabic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#xinaprocessor.helper.transliteration_to_arabic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-xinaprocessor">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xinaprocessor" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="modules.html" class="btn btn-neutral float-left" title="xinaprocessor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, XinaAI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

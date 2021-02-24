@@ -24,11 +24,11 @@ class TextCleaner(BaseCleaner):
 
     @staticmethod
     def create_cleaner(text: str, sep: str = "\n"):
-        """Creates a TextCleaner object given text and sep.
+        r"""Creates a TextCleaner object given text and sep.
 
         Args:
             text (str): Input text to be cleaned.
-            sep (str, optional): Separator to split text on. Defaults to "\n".
+            sep (str, optional): Separator to split text on. Defaults to "\\n".
 
         Returns:
             TextCleaner: text cleaner object.
@@ -37,11 +37,11 @@ class TextCleaner(BaseCleaner):
 
     @staticmethod
     def create_cleaner_from_list(lst: List[str], sep: str = "\n"):
-        """Creates a TextCleaner object given list of lines.
+        r"""Creates a TextCleaner object given list of lines.
 
         Args:
             lst (List[str]): List of lines to be cleaned
-            sep (str, optional): Separator used to join the lines. Defaults to "\n".
+            sep (str, optional): Separator used to join the lines. Defaults to "\\n".
 
         Returns:
             TextCleaner: text cleaner object.
@@ -283,7 +283,6 @@ class TextCleaner(BaseCleaner):
         return TextCleaner.create_cleaner_from_list(self.lines + other.lines, self.sep)
 
 
-
 class FileCleaner(TextCleaner):
     """Process and clean file
 
@@ -303,18 +302,18 @@ class FileCleaner(TextCleaner):
 
     def __init__(self, filepath: str, savepath: str = None, encoding="utf8",
                  header: bool = None, large: bool = False) -> None:
-        
+
         if not os.path.isfile(filepath):
             raise FileNotFoundError("File does not exist.")
         # raise error if the file size is larger than one GB
         if not large and os.path.getsize(filepath) / 2 ** 30 > 1:
             raise OSError("File too large. It is prefable to use FileStreamCleaner instead.\n"
                           "Use large=True to disable this error.")
-        
+
         self.file = open(filepath, "r", encoding=encoding)
         self.savepath = savepath
         self.encoding = encoding
-        
+
         if header:
             self.file = next(self.file)
         super().__init__(self.file.read())

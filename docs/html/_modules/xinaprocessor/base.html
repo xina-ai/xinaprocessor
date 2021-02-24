@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>xinaprocessor.base &mdash; XinaProcessor 0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> XinaProcessor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">xinaprocessor</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">XinaProcessor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>xinaprocessor.base</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for xinaprocessor.base</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">xinaprocessor.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">xinaprocessor.helper</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">xinaprocessor.classes</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">reduce</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+
+
+<div class="viewcode-block" id="BaseCleaner"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner">[docs]</a><span class="k">class</span> <span class="nc">BaseCleaner</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base class for all cleaners, it contains all basic functionality of the cleaner</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lines (List[str]): list of strings, text to be processed</span>
+<span class="sd">        stream (bool): whether to use streaming or not</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">stream</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="n">lines</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span>
+        <span class="c1"># used for streaming</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sequential</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+
+    <span class="c1"># region remove functions</span>
+<div class="viewcode-block" id="BaseCleaner.remove_english_text"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_english_text">[docs]</a>    <span class="k">def</span> <span class="nf">remove_english_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes english characters from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">ENGLISH_CHARS</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_arabic_text"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_arabic_text">[docs]</a>    <span class="k">def</span> <span class="nf">remove_arabic_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes arabic characters from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">ARABIC_CHARS</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_numbers"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_numbers">[docs]</a>    <span class="k">def</span> <span class="nf">remove_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes english and arabic numbers from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">ENGLISH_NUM</span> <span class="o">+</span> <span class="n">ARABIC_NUM</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_arabic_numbers"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_arabic_numbers">[docs]</a>    <span class="k">def</span> <span class="nf">remove_arabic_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes arabic numbers from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">ARABIC_NUM</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_english_numbers"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_english_numbers">[docs]</a>    <span class="k">def</span> <span class="nf">remove_english_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes english numbers from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">ENGLISH_NUM</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_arabic_punctuations"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_arabic_punctuations">[docs]</a>    <span class="k">def</span> <span class="nf">remove_arabic_punctuations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes arabic punctuations from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">ARABIC_PUNCTUATION</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_english_punctuations"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_english_punctuations">[docs]</a>    <span class="k">def</span> <span class="nf">remove_english_punctuations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes english punctuations from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">ENGLISH_PUNCTUATION</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_other_punctuations"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_other_punctuations">[docs]</a>    <span class="k">def</span> <span class="nf">remove_other_punctuations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes all punctuations other than english and arabic punctuations from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">OTHER_PUNCTUATION</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_punctuations"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_punctuations">[docs]</a>    <span class="k">def</span> <span class="nf">remove_punctuations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes all punctuations from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">PUNCTUATION</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_tashkeel_main"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_tashkeel_main">[docs]</a>    <span class="k">def</span> <span class="nf">remove_tashkeel_main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes the 8 known arabic harakat from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">HARAKAT_MAIN</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_tashkeel_other"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_tashkeel_other">[docs]</a>    <span class="k">def</span> <span class="nf">remove_tashkeel_other</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes less known arabic harakat from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">HARAKAT_OTHERS</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_tashkeel"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_tashkeel">[docs]</a>    <span class="k">def</span> <span class="nf">remove_tashkeel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes all arabic harakat from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">HARAKAT</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_tatweel"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_tatweel">[docs]</a>    <span class="k">def</span> <span class="nf">remove_tatweel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes tatweel symbol &quot;\u0640&quot; from text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">TATWEEL</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_extra_spaces"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_extra_spaces">[docs]</a>    <span class="k">def</span> <span class="nf">remove_extra_spaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keep_space</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes extra spaces from text</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            keep_space (int, optional): number of maximum spaces to keep. Defaults to 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">remove_extra_spaces</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">keep_space</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_emojis"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_emojis">[docs]</a>    <span class="k">def</span> <span class="nf">remove_emojis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes all emojis using emojis library</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="n">remove_emoji</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_hashtags"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_hashtags">[docs]</a>    <span class="k">def</span> <span class="nf">remove_hashtags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes all hashtags from text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="n">remove_hashtags</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_quranic_annotations"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_quranic_annotations">[docs]</a>    <span class="k">def</span> <span class="nf">remove_quranic_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes all quranic annotations from text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">QURANIC_ANNOTATION</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_honorific_signs"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_honorific_signs">[docs]</a>    <span class="k">def</span> <span class="nf">remove_honorific_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes all honorific signs from text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">HONORIFIC_SIGN</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_links"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_links">[docs]</a>    <span class="k">def</span> <span class="nf">remove_links</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes all links from text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="n">remove_links</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.remove_mentions"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.remove_mentions">[docs]</a>    <span class="k">def</span> <span class="nf">remove_mentions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes all mentions from text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="n">remove_mentions</span><span class="p">)</span></div>
+
+    <span class="c1"># endregion</span>
+    <span class="c1"># region internal functions</span>
+
+    <span class="k">def</span> <span class="nf">_filter_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_filter_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp_list</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inp_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="n">fnc</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="nb">filter</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply</span><span class="p">(</span><span class="n">inp_list</span><span class="p">,</span> <span class="n">fnc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_apply_on_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fnc</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">,</span> <span class="n">fnc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp_list</span><span class="p">,</span> <span class="n">fnc</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sequential</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fnc</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fnc</span><span class="p">(</span><span class="n">inp_list</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_keep_only</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_keep</span><span class="p">,</span> <span class="n">remove_tashkeel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">remove_tatweel</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span>
+            <span class="n">to_keep</span><span class="p">,</span> <span class="n">remove_tashkeel</span><span class="o">=</span><span class="n">remove_tashkeel</span><span class="p">,</span> <span class="n">remove_tatweel</span><span class="o">=</span><span class="n">remove_tatweel</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_keep</span><span class="p">,</span> <span class="n">remove_tashkeel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">remove_tatweel</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">to_keep</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">to_keep</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">to_keep</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">remove_tashkeel</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_tashkeel</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">remove_tatweel</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_tatweel</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">keep_only</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">to_keep</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp_list</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">(</span><span class="n">inp_list</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_map_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_map</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">list_map</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="n">fnc</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sequential</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fnc</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lines</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">fnc</span><span class="p">(</span><span class="n">list_map</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remove</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">remove</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">remove</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">remove</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">remove</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">replace_list</span><span class="p">(</span><span class="n">remove</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">replace</span><span class="p">,</span> <span class="n">rep_with</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">replace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">replace</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">replace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">replace</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">replace_list</span><span class="p">(</span><span class="n">replace</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">rep_with</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_join_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">)</span> <span class="k">if</span> <span class="n">sep</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_flatten_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Flatten a list of lists and keeps only the provided indices.</span>
+<span class="sd">        if indices is None, all indices are kept and flattened</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            indices (List[int], optional): indices to keep from the inner. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fnc</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                                         <span class="k">if</span> <span class="n">indices</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">])</span>
+        <span class="n">fnc2</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">reduce</span><span class="p">,</span> <span class="n">operator</span><span class="o">.</span><span class="n">iconcat</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_on_lines</span><span class="p">(</span><span class="n">fnc</span><span class="p">)</span><span class="o">.</span><span class="n">_apply_on_lines</span><span class="p">(</span><span class="n">fnc2</span><span class="p">)</span>
+    <span class="c1"># endregion</span>
+    <span class="c1"># region filter functions</span>
+
+<div class="viewcode-block" id="BaseCleaner.drop_lines_below_count"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.drop_lines_below_count">[docs]</a>    <span class="k">def</span> <span class="nf">drop_lines_below_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drops any line has frequency for a certain symbol below the threshold</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filter_fn</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">line</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">threshold</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_lines</span><span class="p">(</span><span class="n">filter_fn</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.drop_lines_above_count"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.drop_lines_above_count">[docs]</a>    <span class="k">def</span> <span class="nf">drop_lines_above_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drops any line has frequency for a certain symbol more than the threshold</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filter_fn</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">line</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">threshold</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_lines</span><span class="p">(</span><span class="n">filter_fn</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.drop_empty_lines"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.drop_empty_lines">[docs]</a>    <span class="k">def</span> <span class="nf">drop_empty_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop all empty lines.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_lines_below_len</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.drop_lines_below_len"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.drop_lines_below_len">[docs]</a>    <span class="k">def</span> <span class="nf">drop_lines_below_len</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop all lines below a certain length</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            length (int): Number of characters or words to use</span>
+<span class="sd">            word_level (bool, optional): False to use character level. Defaults to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filter_fn</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                          <span class="k">if</span> <span class="n">word_level</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="n">length</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_lines</span><span class="p">(</span><span class="n">filter_fn</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.drop_lines_above_len"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.drop_lines_above_len">[docs]</a>    <span class="k">def</span> <span class="nf">drop_lines_above_len</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop all lines above a certain length</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            length (int): Number of characters or words to use</span>
+<span class="sd">            word_level (bool, optional): False to use character level. Defaults to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filter_fn</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                          <span class="k">if</span> <span class="n">word_level</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="n">length</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_lines</span><span class="p">(</span><span class="n">filter_fn</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.drop_lines_with_len"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.drop_lines_with_len">[docs]</a>    <span class="k">def</span> <span class="nf">drop_lines_with_len</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop all lines with a certain length</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            length (int): Number of characters or words to use</span>
+<span class="sd">            word_level (bool, optional): False to use character level. Defaults to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filter_fn</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                          <span class="k">if</span> <span class="n">word_level</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">))</span> <span class="o">!=</span> <span class="n">length</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_lines</span><span class="p">(</span><span class="n">filter_fn</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.drop_lines_contain_single_char"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.drop_lines_contain_single_char">[docs]</a>    <span class="k">def</span> <span class="nf">drop_lines_contain_single_char</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop all lines contain at least a single character word (single character between spaces or</span>
+<span class="sd">        single character at start or end of a line)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            length (int): Number of characters or words to use</span>
+<span class="sd">            word_level (bool, optional): False to use character level. Defaults to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filter_fn</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="ow">not</span> <span class="n">contains_single_char</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_lines</span><span class="p">(</span><span class="n">filter_fn</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.drop_lines_with_repeated_chars"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.drop_lines_with_repeated_chars">[docs]</a>    <span class="k">def</span> <span class="nf">drop_lines_with_repeated_chars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repeated</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop all lines with certain number of consecutively repeated characters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            repeated (int, optional): number of consecutively repeated characters. Defaults to 3.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_lines</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="ow">not</span> <span class="n">contains_repeated_chars</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">repeated</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.drop_lines_contain"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.drop_lines_contain">[docs]</a>    <span class="k">def</span> <span class="nf">drop_lines_contain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop all lines contain a certain string</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_string (str): string to match lines on</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_lines</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">input_string</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.drop_lines_contain_persian"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.drop_lines_contain_persian">[docs]</a>    <span class="k">def</span> <span class="nf">drop_lines_contain_persian</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop all lines contain persian specific characters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filter_fn</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="ow">not</span> <span class="n">contains_persian</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_lines</span><span class="p">(</span><span class="n">filter_fn</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.keep_lines_contain"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.keep_lines_contain">[docs]</a>    <span class="k">def</span> <span class="nf">keep_lines_contain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_string</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep only all lines contain a certain string</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_string (str): string to match lines on</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_lines</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">input_string</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span></div>
+
+    <span class="c1"># endregion</span>
+    <span class="c1"># region additional functions</span>
+
+<div class="viewcode-block" id="BaseCleaner.clear_text"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.clear_text">[docs]</a>    <span class="k">def</span> <span class="nf">clear_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear text. Text should be added before you can clean again.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.clear_sequential"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.clear_sequential">[docs]</a>    <span class="k">def</span> <span class="nf">clear_sequential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear all functions that will be applied to the text when streaming is true</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sequential</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.split_lines_on"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.split_lines_on">[docs]</a>    <span class="k">def</span> <span class="nf">split_lines_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Further split each line by the input &quot;symbol&quot;.</span>
+<span class="sd">        Number of lines will increase by the number of splits applied.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            symbol (str): Symbol to split on</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">symbol</span><span class="p">))</span><span class="o">.</span><span class="n">_flatten_list</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.split_and_remove_lines_on"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.split_and_remove_lines_on">[docs]</a>    <span class="k">def</span> <span class="nf">split_and_remove_lines_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Further split each line by the input &quot;symbol&quot; and keeps only (columns) indices</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            symbol (str): Symbol to split on</span>
+<span class="sd">            columns (List[int]): columns to keep after splitting.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">symbol</span><span class="p">))</span><span class="o">.</span><span class="n">_flatten_list</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.add_text"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.add_text">[docs]</a>    <span class="k">def</span> <span class="nf">add_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add more text to be processed</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): input text to add</span>
+<span class="sd">            sep (str, optional): separator to split text if needed. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">text</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">sep</span> <span class="k">else</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_lines</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.set_text"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.set_text">[docs]</a>    <span class="k">def</span> <span class="nf">set_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Replace text with a new text</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): input text to add</span>
+<span class="sd">            sep (str, optional): separator to split text if needed. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">text</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">sep</span> <span class="k">else</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.connect_single_char"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.connect_single_char">[docs]</a>    <span class="k">def</span> <span class="nf">connect_single_char</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_prev</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Connect all single character word with the previous or next word.</span>
+
+<span class="sd">        Normally used to connect conjunctions or other letters with the next word.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            with_prev (bool, optional): True to connect with the previous word. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="n">remove_single_char_space_before</span>
+                               <span class="k">if</span> <span class="n">with_prev</span> <span class="k">else</span> <span class="n">remove_single_char_space_after</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.replace_repeated_chars"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.replace_repeated_chars">[docs]</a>    <span class="k">def</span> <span class="nf">replace_repeated_chars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repeated</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">keep_char</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep only certain number of consecutively repeated characters.</span>
+
+<span class="sd">        Consecutively repeated (repeated or higher) times characters will be kept (keep_char) times</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            repeated (int, optional): number of consecutively repeated characters. Defaults to 3.</span>
+<span class="sd">            keep_char (int, optional): number of characters to keep. Defaults to 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">replace_repeated_chars</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">repeated</span><span class="p">,</span> <span class="n">keep_char</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.replace_except"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.replace_except">[docs]</a>    <span class="k">def</span> <span class="nf">replace_except</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keep_symbols</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replace_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">replace_except</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">keep_symbols</span><span class="p">,</span> <span class="n">replace_by</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.convert_arabic_numbers_to_english"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.convert_arabic_numbers_to_english">[docs]</a>    <span class="k">def</span> <span class="nf">convert_arabic_numbers_to_english</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert arabic numbers to english numbers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">multi_replace</span><span class="p">(</span><span class="n">ARABIC_NUM</span><span class="p">,</span> <span class="n">ENGLISH_NUM</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.strip"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.strip">[docs]</a>    <span class="k">def</span> <span class="nf">strip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Strip left and right spaces from all lines in text.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">)</span></div>
+
+    <span class="c1"># endregion</span>
+    <span class="c1"># region properties</span>
+
+    <span class="o">@</span> <span class="nb">property</span>
+    <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_join_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># endregion</span>
+    <span class="c1"># region keep functions</span>
+
+<div class="viewcode-block" id="BaseCleaner.keep_arabic_only"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.keep_arabic_only">[docs]</a>    <span class="k">def</span> <span class="nf">keep_arabic_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep arabic text only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keep_only</span><span class="p">(</span><span class="n">ARABIC_CHARS</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.keep_numbers_only"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.keep_numbers_only">[docs]</a>    <span class="k">def</span> <span class="nf">keep_numbers_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep arabic and english numbers only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keep_only</span><span class="p">(</span><span class="n">ARABIC_NUM</span> <span class="o">+</span> <span class="n">ENGLISH_NUM</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.keep_english_only"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.keep_english_only">[docs]</a>    <span class="k">def</span> <span class="nf">keep_english_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep english text only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keep_only</span><span class="p">(</span><span class="n">ENGLISH_CHARS</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.keep_arabic_and_numbers_only"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.keep_arabic_and_numbers_only">[docs]</a>    <span class="k">def</span> <span class="nf">keep_arabic_and_numbers_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep arabic text and arabic and english numbers only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keep_only</span><span class="p">(</span><span class="n">ARABIC_CHARS</span> <span class="o">+</span> <span class="n">ARABIC_NUM</span> <span class="o">+</span> <span class="n">ENGLISH_NUM</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.keep_arabic_and_english_numbers_only"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.keep_arabic_and_english_numbers_only">[docs]</a>    <span class="k">def</span> <span class="nf">keep_arabic_and_english_numbers_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep arabic text and english numbers only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keep_only</span><span class="p">(</span><span class="n">ARABIC_CHARS</span> <span class="o">+</span> <span class="n">ENGLISH_NUM</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.keep_arabic_with_tashkeel_only"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.keep_arabic_with_tashkeel_only">[docs]</a>    <span class="k">def</span> <span class="nf">keep_arabic_with_tashkeel_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep arabic text and main harakat only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keep_only</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">ARABIC_CHARS</span><span class="p">)</span> <span class="o">+</span> <span class="n">HARAKAT_MAIN</span><span class="p">,</span> <span class="n">remove_tashkeel</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.keep_arabic_and_english_only"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.keep_arabic_and_english_only">[docs]</a>    <span class="k">def</span> <span class="nf">keep_arabic_and_english_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep arabic and english text only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keep_only</span><span class="p">(</span><span class="n">ENGLISH_CHARS</span> <span class="o">+</span> <span class="n">ARABIC_CHARS</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.keep_english_and_numbers_only"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.keep_english_and_numbers_only">[docs]</a>    <span class="k">def</span> <span class="nf">keep_english_and_numbers_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Keep englsih text and english numbers only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keep_only</span><span class="p">(</span><span class="n">ENGLISH_CHARS</span> <span class="o">+</span> <span class="n">ENGLISH_NUM</span><span class="p">)</span></div>
+
+    <span class="c1"># endregion</span>
+    <span class="c1"># region get functions</span>
+
+<div class="viewcode-block" id="BaseCleaner.get_lines"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.get_lines">[docs]</a>    <span class="k">def</span> <span class="nf">get_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return lines</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[str]: list of all lines</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lines</span></div>
+
+    <span class="c1"># endregion</span>
+    <span class="c1"># region object operations</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">item</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">lines</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lines</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="c1"># endregion</span>
+    <span class="c1"># region normalize functions</span>
+
+<div class="viewcode-block" id="BaseCleaner.normalize_lamalef"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.normalize_lamalef">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_lamalef</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert single lam_alef char to two characters lam and alef</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">LAM_ALEF_COMBINED</span><span class="p">,</span> <span class="n">LAM_ALEF_NORMAL</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.normalize_hamza"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.normalize_hamza">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_hamza</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert all hamza variations to the normal hamza</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">HAMZA_CHARS</span><span class="p">,</span> <span class="n">NORMAL_HAMZA</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.normalize_alef"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.normalize_alef">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_alef</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert all alef variations to the normal alef</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">ALEF_CHARS</span><span class="p">,</span> <span class="n">NORMAL_ALEF</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.normalize"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert all alef and hamza variations to the normal ones, and</span>
+<span class="sd">        convert single lam_alef char to two characters lam and alef</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_lamalef</span><span class="p">()</span><span class="o">.</span><span class="n">normalize_alef</span><span class="p">()</span><span class="o">.</span><span class="n">normalize_hamza</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.denormalize_hamza"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.denormalize_hamza">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize_hamza</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert normal hamza to all possible hamza forms</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">HAMZA_CHARS</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">HAMZA_CHARS</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.denormalize_alef"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.denormalize_alef">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize_alef</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert normal alef to all possible alef forms</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">ALEF_CHARS</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">ALEF_CHARS</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.denormalize"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert normal alef and hamza to all possible forms</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">denormalize_alef</span><span class="p">()</span><span class="o">.</span><span class="n">denormalize_hamza</span><span class="p">()</span></div>
+
+    <span class="c1"># endregion</span>
+    <span class="c1"># region general pipeline clean functions</span>
+<div class="viewcode-block" id="BaseCleaner.twitter_pipeline"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.twitter_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">twitter_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clean twitter text by removing hashtags, mentions and links</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">remove_hashtags</span><span class="p">()</span><span class="o">.</span><span class="n">remove_mentions</span><span class="p">()</span><span class="o">.</span><span class="n">remove_links</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.twitter_arabic_pipeline"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.twitter_arabic_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">twitter_arabic_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clean arabic twitter text by removing hashtags, mentions and links.</span>
+<span class="sd">        Then, keep only arabic text, replace repeated characters and drop empty lines.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">twitter_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">keep_arabic_only</span><span class="p">()</span><span class="o">.</span><span class="n">replace_repeated_chars</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">drop_empty_lines</span><span class="p">()</span></div>
+    <span class="c1"># endregion</span>
+
+    <span class="c1"># region replace functions</span>
+<div class="viewcode-block" id="BaseCleaner.transliteration_to_arabic"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.transliteration_to_arabic">[docs]</a>    <span class="k">def</span> <span class="nf">transliteration_to_arabic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="n">transliteration_to_arabic</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseCleaner.arabic_to_transliteration"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.base.BaseCleaner.arabic_to_transliteration">[docs]</a>    <span class="k">def</span> <span class="nf">arabic_to_transliteration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_lines</span><span class="p">(</span><span class="n">arabic_to_transliteration</span><span class="p">)</span></div></div>
+    <span class="c1"># endregion</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, XinaAI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

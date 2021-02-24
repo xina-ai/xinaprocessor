@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>xinaprocessor.helper &mdash; XinaProcessor 0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> XinaProcessor
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">xinaprocessor</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">XinaProcessor</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>xinaprocessor.helper</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for xinaprocessor.helper</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">xinaprocessor.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">emoji</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+
+<div class="viewcode-block" id="replace_list"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.replace_list">[docs]</a><span class="k">def</span> <span class="nf">replace_list</span><span class="p">(</span><span class="n">list_chars</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">replace_with</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="n">chars</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">list_chars</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">chars</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">replace_with</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="remove_extra_spaces"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.remove_extra_spaces">[docs]</a><span class="k">def</span> <span class="nf">remove_extra_spaces</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keep_spaces</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; +&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">keep_spaces</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="remove_emoji"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.remove_emoji">[docs]</a><span class="k">def</span> <span class="nf">remove_emoji</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">emoji</span><span class="o">.</span><span class="n">get_emoji_regexp</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="remove_hashtags"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.remove_hashtags">[docs]</a><span class="k">def</span> <span class="nf">remove_hashtags</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#.*?(?=\s)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="remove_links"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.remove_links">[docs]</a><span class="k">def</span> <span class="nf">remove_links</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;http[s]?://\S+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="remove_mentions"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.remove_mentions">[docs]</a><span class="k">def</span> <span class="nf">remove_mentions</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;@.*?(?=\s)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="contains_single_char"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.contains_single_char">[docs]</a><span class="k">def</span> <span class="nf">contains_single_char</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?:^| )\w(?:$| )&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="contains_persian"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.contains_persian">[docs]</a><span class="k">def</span> <span class="nf">contains_persian</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[\uFB50-\uFB9F</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PERSIAN_UNIQUE_CHARS</span><span class="p">)),</span> <span class="n">text</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="remove_single_char_space_before"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.remove_single_char_space_before">[docs]</a><span class="k">def</span> <span class="nf">remove_single_char_space_before</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?:^| )(\w)(?:$| )&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1 &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="remove_single_char_space_after"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.remove_single_char_space_after">[docs]</a><span class="k">def</span> <span class="nf">remove_single_char_space_after</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?:^| )(\w)(?:$| )&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot; \1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="multi_replace"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.multi_replace">[docs]</a><span class="k">def</span> <span class="nf">multi_replace</span><span class="p">(</span><span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Replace each item in keys with the corresponding item in values in the input text</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        keys (List[str]): a list of strings to be replaces</span>
+<span class="sd">        values (List[str]): list of strings with same length of keys to with values to be replaced with</span>
+<span class="sd">        text (str): input text to apply replacements on</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: text with strings in keys replaced with corresponding strings in values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">,</span> <span class="n">keys</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">match</span><span class="p">):</span> <span class="k">return</span> <span class="n">values</span><span class="p">[</span><span class="n">keys</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))]</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="keep_only"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.keep_only">[docs]</a><span class="k">def</span> <span class="nf">keep_only</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">list_chars</span><span class="p">):</span>
+    <span class="n">chars</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">list_chars</span><span class="p">)</span>
+    <span class="n">spaced_text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[^</span><span class="si">{</span><span class="n">chars</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">remove_extra_spaces</span><span class="p">(</span><span class="n">spaced_text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="replace_repeated_chars"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.replace_repeated_chars">[docs]</a><span class="k">def</span> <span class="nf">replace_repeated_chars</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">repeated</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keep_char</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">repeated</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">keep_char</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(.)\1</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">{{</span><span class="si">{</span><span class="n">repeated</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">,</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1&quot;</span> <span class="o">*</span> <span class="n">keep_char</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="replace_except"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.replace_except">[docs]</a><span class="k">def</span> <span class="nf">replace_except</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keep_symbols</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replace_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[^</span><span class="si">{</span><span class="n">keep_symbols</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">replace_by</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="contains_repeated_chars"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.contains_repeated_chars">[docs]</a><span class="k">def</span> <span class="nf">contains_repeated_chars</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">repeated</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(.)\1</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">{{</span><span class="si">{</span><span class="n">repeated</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">,</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="train_test_split"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.train_test_split">[docs]</a><span class="k">def</span> <span class="nf">train_test_split</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">test_size</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">test_size</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">test_size</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;test size sould be between 0 and 1&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;the length of the given list should be greater than 1&quot;</span>
+    <span class="k">if</span> <span class="n">random_seed</span><span class="p">:</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">test_size</span><span class="p">)]</span>
+    <span class="n">train</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">test_size</span><span class="p">):]</span>
+    <span class="k">return</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span></div>
+
+
+<div class="viewcode-block" id="export_text"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.export_text">[docs]</a><span class="k">def</span> <span class="nf">export_text</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="transliteration_to_arabic"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.transliteration_to_arabic">[docs]</a><span class="k">def</span> <span class="nf">transliteration_to_arabic</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">ar_char</span><span class="p">,</span> <span class="n">buc_symbole</span> <span class="ow">in</span> <span class="n">BUCKWALTER_TRANSLITERATION</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">buc_symbole</span><span class="p">,</span> <span class="n">ar_char</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+<div class="viewcode-block" id="arabic_to_transliteration"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.arabic_to_transliteration">[docs]</a><span class="k">def</span> <span class="nf">arabic_to_transliteration</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">ar_char</span><span class="p">,</span> <span class="n">buc_symbole</span> <span class="ow">in</span> <span class="n">BUCKWALTER_TRANSLITERATION</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">ar_char</span><span class="p">,</span> <span class="n">buc_symbole</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+<div class="viewcode-block" id="str_count_frequency"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.str_count_frequency">[docs]</a><span class="k">def</span> <span class="nf">str_count_frequency</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">word_level</span><span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">word_level</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Counter</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">Counter</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="doc_count_frequency"><a class="viewcode-back" href="../../xinaprocessor.html#xinaprocessor.helper.doc_count_frequency">[docs]</a><span class="k">def</span> <span class="nf">doc_count_frequency</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">split_by</span><span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">word_level</span><span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">split_by</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">str_count_frequency</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span> <span class="n">split_by</span><span class="p">,</span> <span class="n">word_level</span><span class="o">=</span> <span class="n">word_level</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, XinaAI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
