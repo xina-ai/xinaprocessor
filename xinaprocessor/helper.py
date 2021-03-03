@@ -30,6 +30,8 @@ def remove_links(text: str):
 def remove_mentions(text: str):
     return re.sub(r"@.*?(?=\s)", "", text)
 
+def remove_emails(text: str):
+    return re.sub(r"\S+@\S+", "", text)
 
 def contains_single_char(text: str):
     return True if re.search(r"(?:^| )\w(?:$| )", text) else False
