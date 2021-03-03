@@ -106,7 +106,7 @@ class BaseCleaner:
         return self._map_lines(remove_hashtags)
 
     def remove_emails(self):
-        """Removes all emails addres from text
+        """Removes all emails address from text
         """
         return self._map_lines(remove_emails)
 
