@@ -24,7 +24,7 @@ def remove_hashtags(text: str):
 
 
 def remove_links(text: str):
-    return re.sub("http[s]?://\S+", "", text)
+    return re.sub("http[s]?://\S+|[wW]{3,}[\S/\?=\.&]+", "", text)
 
 
 def remove_mentions(text: str):
