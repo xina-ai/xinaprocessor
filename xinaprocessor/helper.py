@@ -28,7 +28,7 @@ def remove_links(text: str):
 
 
 def remove_mentions(text: str):
-    return re.sub(r"@.*?(?=\s)", "", text)
+    return re.sub(r" @[\w_]+ | @[\w_]+|^@[\w_]+ ", " ", text)
 
 def remove_emails(text: str):
     return re.sub(r"\S+@\S+", "", text)
