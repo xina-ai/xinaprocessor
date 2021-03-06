@@ -11,8 +11,12 @@ HARAKAT_MAIN = [
     "\u0651",  # Shadda
     "\u0652",  # Sukun
 ]
-ALEF_CHARS = "إأٱآاى" + "\u0670"  # Arabic Letter Superscript Alef
+ALEF_CHARS = "إأٱآا" + "\u0670"  # Arabic Letter Superscript Alef
 NORMAL_ALEF = "ا"
+TAH_MARBOTA = "ة"
+HA = "ه"
+ALEF_MAKSORA = "ى"
+YA = "ي"
 HAMZA_CHARS = "ءؤئ" + "\u0655\u0656"  # Arabic Hamza Above and Below
 NORMAL_HAMZA = "ء"
 LAM_ALEF_COMBINED = [

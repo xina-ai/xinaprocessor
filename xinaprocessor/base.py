@@ -508,6 +508,16 @@ class BaseCleaner:
         """
         return self._replace(ALEF_CHARS, NORMAL_ALEF)
 
+    def normalize_tah_marbota(self):
+        """Convert all tah marbota to ha
+        """
+        return self._replace(TAH_MARBOTA, HA)
+
+    def normalize_alef_maksora(self):
+        """Convert all alef maksora to ya
+        """
+        return self._replace(ALEF_MAKSORA, YA)
+
     def normalize(self):
         """Convert all alef and hamza variations to the normal ones, and
         convert single lam_alef char to two characters lam and alef
