@@ -6,6 +6,7 @@ from functools import partial, reduce
 import operator
 from xinaprocessor.decorators import show_empty_warning
 
+
 @show_empty_warning
 class BaseCleaner:
     """Base class for all cleaners, it contains all basic functionality of the cleaner
@@ -196,7 +197,7 @@ class BaseCleaner:
 
     def _join_text(self, lines, sep):
         return sep.join(lines).strip() if sep else lines[0]
-    
+
     def _flatten_list(self, indices=None):
         """Flatten a list of lists and keeps only the provided indices.
         if indices is None, all indices are kept and flattened
@@ -519,10 +520,11 @@ class BaseCleaner:
         return self._replace(ALEF_MAKSORA, YA)
 
     def normalize(self):
-        """Convert all alef and hamza variations to the normal ones, and
-        convert single lam_alef char to two characters lam and alef
+        """Convert all alef variations to the normal alef,
+        convert single lam_alef char to two characters lam and alef, and
+        convert all tah marbota to ha
         """
-        return self.normalize_lamalef().normalize_alef().normalize_hamza()
+        return self.normalize_lamalef().normalize_alef().normalize_tah_marbota()
 
     def denormalize_hamza(self):
         """Convert normal hamza to all possible hamza forms
