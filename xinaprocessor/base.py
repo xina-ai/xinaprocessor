@@ -463,6 +463,15 @@ class BaseCleaner:
         return self._keep_only(ENGLISH_CHARS + ENGLISH_NUM)
 
     # endregion
+
+    # region swap functions
+    def swap_tanween_alef(self):
+        """swap the tanween alef pattern by alef then tanween 
+        """
+        return self._map_lines(swap_tanween_alef)
+
+    # endregion
+
     # region get functions
 
     def get_lines(self):

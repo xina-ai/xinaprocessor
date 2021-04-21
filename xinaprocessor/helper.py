@@ -123,3 +123,6 @@ def str_count_frequency(text: str, sep= " ", word_level= True):
 def doc_count_frequency(texts: list, split_by= " ", word_level= True):
     text = split_by.join(texts)
     return str_count_frequency(text, sep= split_by, word_level= word_level)
+
+def swap_tanween_alef(text: str):
+    return text.replace(TANWEEN + NORMAL_ALEF, NORMAL_ALEF + TANWEEN)

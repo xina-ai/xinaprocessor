@@ -11,6 +11,7 @@ HARAKAT_MAIN = [
     "\u0651",  # Shadda
     "\u0652",  # Sukun
 ]
+TANWEEN = HARAKAT_MAIN[0]
 ALEF_CHARS = "إأٱآا" + "\u0670"  # Arabic Letter Superscript Alef
 NORMAL_ALEF = "ا"
 TAH_MARBOTA = "ة"
