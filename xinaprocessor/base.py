@@ -309,6 +309,13 @@ class BaseCleaner:
             lambda line: not contains_persian(line))
         return self._filter_lines(filter_fn)
 
+    def drop_lines_contain_english(self):
+        """Drop all lines contain english character
+        """
+        filter_fn = (
+            lambda line: not contains_english(line))
+        return self._filter_lines(filter_fn)
+
     def keep_lines_contain(self, input_string: int):
         """Keep only all lines contain a certain string
 
