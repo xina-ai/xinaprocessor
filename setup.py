@@ -9,7 +9,7 @@ with open('README.rst', encoding='utf-8') as f:
 
 setup(
     name='xinaprocessor',
-    version='0.2',
+    version='0.4',
     install_requires=required,
     tests_require=['pytest'],
     author="Xina AI",
